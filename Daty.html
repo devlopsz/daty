@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daty</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <style>
+    @font-face {
+      font-family: "Antrophic Sans Display";
+      src: local("Antrophic Sans Display"), local("Anthropic Sans Display");
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "SF Pro Text";
+      src: local("SF Pro Text"), local("SF Pro");
+      font-display: swap;
+    }
+
+    :root {
+      color-scheme: light dark;
+      --bg: #f5f5f7;
+      --surface: rgba(255, 255, 255, 0.74);
+      --surface-strong: rgba(255, 255, 255, 0.96);
+      --surface-soft: rgba(255, 255, 255, 0.58);
+      --surface-hover: rgba(255, 255, 255, 0.78);
+      --border: rgba(0, 0, 0, 0.075);
+      --border-strong: rgba(0, 0, 0, 0.14);
+      --text: #1d1d1f;
+      --muted: #6e6e73;
+      --muted-strong: #424245;
+      --accent: #0071e3;
+      --accent-strong: #0051a8;
+      --green: #15803d;
+      --amber: #b45309;
+      --red: #d70015;
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.11);
+      --shadow-soft: 0 14px 34px rgba(0, 0, 0, 0.08);
+      --inner-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+      --radius-xs: 14px;
+      --radius-sm: 18px;
+      --radius: 26px;
+      --radius-lg: 34px;
+      --font-display: "Antrophic Sans Display", "Anthropic Sans Display", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      --font-body: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #050506;
+      --surface: rgba(30, 30, 32, 0.76);
+      --surface-strong: rgba(42, 42, 45, 0.95);
+      --surface-soft: rgba(255, 255, 255, 0.07);
+      --surface-hover: rgba(255, 255, 255, 0.105);
+      --border: rgba(255, 255, 255, 0.10);
+      --border-strong: rgba(255, 255, 255, 0.20);
+      --text: #f5f5f7;
+      --muted: #a1a1a6;
+      --muted-strong: #d2d2d7;
+      --accent: #2997ff;
+      --accent-strong: #68b9ff;
+      --green: #4ade80;
+      --amber: #fbbf24;
+      --red: #ff453a;
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.48);
+      --shadow-soft: 0 16px 44px rgba(0, 0, 0, 0.34);
+      --inner-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0) 34%),
+        linear-gradient(135deg, #fafafa 0%, var(--bg) 45%, #ededf0 100%);
+      color: var(--text);
+      font-family: var(--font-body);
+      letter-spacing: 0;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    html[data-theme="dark"] body {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0) 30%),
+        linear-gradient(135deg, #101012 0%, var(--bg) 48%, #17171a 100%);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+      letter-spacing: 0;
+    }
+
+    button {
+      border: 0;
+    }
+
+    .app {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 24px;
+    }
+
+    .app-header {
+      display: grid;
+      gap: 22px;
+      margin-bottom: 22px;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      min-width: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: 48px;
+      line-height: 1;
+      font-weight: 600;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: 27px;
+      line-height: 1.15;
+      font-weight: 500;
+    }
+
+    h3 {
+      font-family: var(--font-display);
+      font-size: 17px;
+      line-height: 1.2;
+      font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .clock {
+      min-width: 106px;
+      min-height: 48px;
+      padding: 0 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow-soft), var(--inner-shadow);
+      backdrop-filter: blur(26px) saturate(160%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .clock strong {
+      display: block;
+      font-size: 20px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .theme-switch,
+    .segments {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 5px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow-soft), var(--inner-shadow);
+      backdrop-filter: blur(26px) saturate(160%);
+    }
+
+    .theme-switch button,
+    .segments button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      min-height: 42px;
+      padding: 0;
+      border-radius: 999px;
+      color: var(--muted-strong);
+      background: transparent;
+      font-size: 14px;
+      font-weight: 750;
+      line-height: 1;
+      cursor: pointer;
+      transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+      white-space: nowrap;
+    }
+
+    .theme-switch button:hover,
+    .segments button:hover {
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+
+    .theme-switch button.is-active,
+    .segments button.is-active {
+      background: var(--surface-strong);
+      color: var(--text);
+      box-shadow: 0 9px 24px rgba(0, 0, 0, 0.11);
+    }
+
+    .segments {
+      width: fit-content;
+    }
+
+    .icon {
+      width: 20px;
+      height: 20px;
+      display: block;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 2;
+    }
+
+    .icon use {
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 2;
+    }
+
+    .btn[data-tooltip],
+    .segments button[data-tooltip],
+    .theme-switch button[data-tooltip],
+    .remove-order[data-tooltip] {
+      position: relative;
+    }
+
+    .btn[data-tooltip]::after,
+    .segments button[data-tooltip]::after,
+    .theme-switch button[data-tooltip]::after,
+    .remove-order[data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 9px);
+      z-index: 40;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface-strong);
+      color: var(--text);
+      box-shadow: var(--shadow-soft);
+      font-size: 12px;
+      font-weight: 750;
+      line-height: 1;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-50%) translateY(4px);
+      transition: opacity 140ms ease, transform 140ms ease;
+      white-space: nowrap;
+    }
+
+    .btn[data-tooltip]:hover::after,
+    .segments button[data-tooltip]:hover::after,
+    .theme-switch button[data-tooltip]:hover::after,
+    .remove-order[data-tooltip]:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .header-actions [data-tooltip]::after,
+    .segments [data-tooltip]::after {
+      top: calc(100% + 9px);
+      bottom: auto;
+      transform: translateX(-50%) translateY(-4px);
+    }
+
+    .header-actions [data-tooltip]:hover::after,
+    .segments [data-tooltip]:hover::after {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.is-active {
+      display: grid;
+      gap: 20px;
+      animation: fadeIn 180ms ease both;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .stat {
+      min-height: 108px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow-soft), var(--inner-shadow);
+      backdrop-filter: blur(28px) saturate(160%);
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+      text-transform: uppercase;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 11px;
+      font-family: var(--font-display);
+      font-size: 31px;
+      line-height: 1;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tool-panel {
+      padding: 28px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow), var(--inner-shadow);
+      backdrop-filter: blur(30px) saturate(165%);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .panel-copy {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .notice {
+      display: none;
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      font-size: 14px;
+      font-weight: 760;
+      line-height: 1.35;
+    }
+
+    .notice.is-visible {
+      display: block;
+    }
+
+    .notice.warning {
+      color: var(--amber);
+      border-color: color-mix(in srgb, var(--amber), transparent 62%);
+      background: color-mix(in srgb, var(--amber), transparent 90%);
+    }
+
+    .notice.error {
+      color: var(--red);
+      border-color: color-mix(in srgb, var(--red), transparent 62%);
+      background: color-mix(in srgb, var(--red), transparent 91%);
+    }
+
+    .notice.success {
+      color: var(--green);
+      border-color: color-mix(in srgb, var(--green), transparent 62%);
+      background: color-mix(in srgb, var(--green), transparent 91%);
+    }
+
+    .order-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .inventory-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .inventory-row {
+      display: grid;
+      align-content: space-between;
+      gap: 18px;
+      min-height: 178px;
+      padding: 20px;
+      border: 1.5px solid color-mix(in srgb, var(--stock-color) 72%, var(--border));
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+      box-shadow: var(--inner-shadow);
+      overflow: hidden;
+      position: relative;
+      transition: border-color 160ms ease, background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .inventory-row::before {
+      content: "";
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      z-index: 1;
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--red);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--red), transparent 78%);
+      opacity: 0;
+      transform: scale(0.7);
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+
+    .inventory-row:hover {
+      border-color: color-mix(in srgb, var(--stock-color) 88%, var(--border-strong));
+      box-shadow: var(--shadow-soft), var(--inner-shadow);
+      transform: translateY(-2px);
+    }
+
+    .inventory-row.is-low {
+      border-color: color-mix(in srgb, var(--stock-color) 72%, var(--border));
+    }
+
+    .inventory-row.is-low::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .item-name strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 1.05;
+    }
+
+    .stock-kicker {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 760;
+      text-transform: uppercase;
+    }
+
+    .item-name small {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .quantity-input {
+      width: 100%;
+      min-height: 54px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface-strong);
+      color: var(--text);
+      font-size: 20px;
+      font-weight: 800;
+      text-align: center;
+      outline: none;
+      font-variant-numeric: tabular-nums;
+      position: relative;
+      z-index: 1;
+      transition: border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .quantity-input:focus,
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent), transparent 84%);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      min-height: 50px;
+      padding: 0;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: var(--inner-shadow);
+      transition: transform 160ms ease, opacity 160ms ease, background 160ms ease, box-shadow 160ms ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      box-shadow: var(--shadow-soft), var(--inner-shadow);
+      transform: translateY(-2px);
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+      transform: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 16px 34px color-mix(in srgb, var(--accent), transparent 72%);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-strong);
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--border);
+      background: var(--surface-strong);
+      color: var(--text);
+    }
+
+    .btn-danger {
+      border: 1px solid color-mix(in srgb, var(--red), transparent 64%);
+      background: color-mix(in srgb, var(--red), transparent 91%);
+      color: var(--red);
+    }
+
+    .order-form {
+      display: grid;
+      grid-template-columns: 1.25fr 0.9fr 0.9fr 0.75fr auto;
+      gap: 14px;
+      align-items: end;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .field label {
+      color: var(--muted-strong);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      min-height: 54px;
+      padding: 0 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface-strong);
+      color: var(--text);
+      outline: none;
+      font-size: 15px;
+      font-weight: 650;
+      transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+
+    .field input::placeholder {
+      color: color-mix(in srgb, var(--muted), transparent 18%);
+    }
+
+    .field.has-error input {
+      border-color: var(--red);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--red), transparent 86%);
+    }
+
+    .day-strip {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+      box-shadow: var(--inner-shadow);
+    }
+
+    .day-strip label {
+      color: var(--muted-strong);
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .day-strip input {
+      width: 128px;
+      min-height: 44px;
+      padding: 0 13px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface-strong);
+      color: var(--text);
+      outline: none;
+      font-size: 15px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .history-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .counter {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .history-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .order-item {
+      display: grid;
+      grid-template-columns: minmax(180px, 1.2fr) 138px 118px 104px 134px auto;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-left: 7px solid var(--order-color, var(--accent));
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+      box-shadow: var(--inner-shadow);
+      animation: fadeIn 180ms ease both;
+      transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+    }
+
+    .order-item:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-hover);
+      box-shadow: var(--shadow-soft), var(--inner-shadow);
+      transform: translateY(-2px);
+    }
+
+    .order-main strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 500;
+      overflow-wrap: anywhere;
+    }
+
+    .order-main small,
+    .order-meta small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .color-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      width: fit-content;
+      max-width: 100%;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: var(--order-color, var(--surface-strong));
+      color: var(--order-text, #111111);
+      font-size: 13px;
+      font-weight: 850;
+      overflow-wrap: anywhere;
+    }
+
+    .amount {
+      color: var(--text);
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .amount span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .remove-order {
+      width: 42px;
+      height: 42px;
+      min-width: 42px;
+      min-height: 42px;
+      padding: 0;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--red), transparent 68%);
+      background: color-mix(in srgb, var(--red), transparent 92%);
+      color: var(--red);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .empty {
+      padding: 34px;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+      color: var(--muted);
+      text-align: center;
+      font-size: 15px;
+      font-weight: 700;
+      background: var(--surface-soft);
+    }
+
+    .footer {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+      text-align: center;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      z-index: 30;
+      min-width: 240px;
+      max-width: min(440px, calc(100% - 32px));
+      transform: translateX(-50%) translateY(18px);
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface-strong);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 760;
+    }
+
+    .toast.is-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 1080px) {
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .order-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .order-form .btn {
+        grid-column: span 2;
+      }
+
+      .order-item {
+        grid-template-columns: minmax(180px, 1fr) 130px 112px 100px;
+      }
+
+      .order-meta,
+      .remove-order {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .app {
+        width: min(100% - 24px, 1180px);
+        padding-top: 20px;
+      }
+
+      .header-row,
+      .panel-head,
+      .history-head {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .header-actions {
+        justify-content: flex-start;
+      }
+
+      .clock {
+        text-align: left;
+      }
+
+      h1 {
+        font-size: 39px;
+      }
+
+      h2 {
+        font-size: 24px;
+      }
+
+      .segments,
+      .theme-switch {
+        width: fit-content;
+      }
+
+      .segments button,
+      .theme-switch button {
+        flex: 0 0 auto;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .tool-panel {
+        padding: 18px;
+        border-radius: 28px;
+      }
+
+      .inventory-row {
+        border-radius: 24px;
+      }
+
+      .inventory-row .quantity-input {
+        text-align: left;
+      }
+
+      .order-form {
+        grid-template-columns: 1fr;
+      }
+
+      .order-form .btn {
+        grid-column: auto;
+      }
+
+      .day-strip {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .day-strip input {
+        width: 100%;
+      }
+
+      .history-actions {
+        justify-content: flex-start;
+      }
+
+      .order-item {
+        grid-template-columns: 1fr;
+        border-radius: 24px;
+      }
+
+      .order-meta,
+      .remove-order {
+        grid-column: auto;
+      }
+
+      .remove-order {
+        width: fit-content;
+      }
+    }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="icon-sun" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="4"></circle>
+      <path d="M12 2v2"></path>
+      <path d="M12 20v2"></path>
+      <path d="m4.93 4.93 1.41 1.41"></path>
+      <path d="m17.66 17.66 1.41 1.41"></path>
+      <path d="M2 12h2"></path>
+      <path d="M20 12h2"></path>
+      <path d="m6.34 17.66-1.41 1.41"></path>
+      <path d="m19.07 4.93-1.41 1.41"></path>
+    </symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24">
+      <path d="M20.2 14.1A7.8 7.8 0 0 1 9.9 3.8 8.6 8.6 0 1 0 20.2 14.1Z"></path>
+    </symbol>
+    <symbol id="icon-boxes" viewBox="0 0 24 24">
+      <path d="M3 7.5 12 3l9 4.5-9 4.5L3 7.5Z"></path>
+      <path d="M3 7.5v9L12 21l9-4.5v-9"></path>
+      <path d="M12 12v9"></path>
+      <path d="m7.5 5.25 9 4.5"></path>
+    </symbol>
+    <symbol id="icon-list" viewBox="0 0 24 24">
+      <path d="M8 6h13"></path>
+      <path d="M8 12h13"></path>
+      <path d="M8 18h13"></path>
+      <path d="M3 6h.01"></path>
+      <path d="M3 12h.01"></path>
+      <path d="M3 18h.01"></path>
+    </symbol>
+    <symbol id="icon-save" viewBox="0 0 24 24">
+      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"></path>
+      <path d="M17 21v-8H7v8"></path>
+      <path d="M7 3v5h8"></path>
+    </symbol>
+    <symbol id="icon-rotate" viewBox="0 0 24 24">
+      <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+      <path d="M3 3v6h6"></path>
+    </symbol>
+    <symbol id="icon-copy" viewBox="0 0 24 24">
+      <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+      <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path>
+    </symbol>
+    <symbol id="icon-plus" viewBox="0 0 24 24">
+      <path d="M12 5v14"></path>
+      <path d="M5 12h14"></path>
+    </symbol>
+    <symbol id="icon-download" viewBox="0 0 24 24">
+      <path d="M12 3v12"></path>
+      <path d="m7 10 5 5 5-5"></path>
+      <path d="M5 21h14"></path>
+    </symbol>
+    <symbol id="icon-trash" viewBox="0 0 24 24">
+      <path d="M3 6h18"></path>
+      <path d="M8 6V4h8v2"></path>
+      <path d="M19 6l-1 15H6L5 6"></path>
+      <path d="M10 11v6"></path>
+      <path d="M14 11v6"></path>
+    </symbol>
+    <symbol id="icon-x" viewBox="0 0 24 24">
+      <path d="M18 6 6 18"></path>
+      <path d="m6 6 12 12"></path>
+    </symbol>
+  </svg>
+
+  <div class="app">
+    <header class="app-header">
+      <div class="header-row">
+        <div class="brand">
+          <h1>Daty</h1>
+        </div>
+
+        <div class="header-actions">
+          <div class="clock" aria-live="polite" aria-label="Hor&aacute;rio atual">
+            <strong id="horaAtual">00:00:00</strong>
+          </div>
+
+          <div class="theme-switch" role="group" aria-label="Escolher tema">
+            <button type="button" data-theme-choice="light" aria-label="Modo claro" title="Modo claro" data-tooltip="Modo claro">
+              <svg class="icon" aria-hidden="true"><use href="#icon-sun"></use></svg>
+            </button>
+            <button type="button" data-theme-choice="dark" aria-label="Modo escuro" title="Modo escuro" data-tooltip="Modo escuro">
+              <svg class="icon" aria-hidden="true"><use href="#icon-moon"></use></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <nav class="segments" aria-label="Alternar area do Daty">
+        <button type="button" class="is-active" data-view-target="estoque" aria-label="Estoque" title="Estoque" data-tooltip="Estoque">
+          <svg class="icon" aria-hidden="true"><use href="#icon-boxes"></use></svg>
+        </button>
+        <button type="button" data-view-target="pedidos" aria-label="Relat&oacute;rio" title="Relat&oacute;rio" data-tooltip="Relat&oacute;rio">
+          <svg class="icon" aria-hidden="true"><use href="#icon-list"></use></svg>
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="view is-active" id="estoqueView" data-view="estoque">
+        <div class="stats" aria-label="Resumo do estoque">
+          <div class="stat">
+            <span>Total no estoque</span>
+            <strong id="stockTotal">0</strong>
+          </div>
+          <div class="stat">
+            <span>Itens em alerta</span>
+            <strong id="lowStockTotal">0</strong>
+          </div>
+          <div class="stat">
+            <span>Pedidos salvos</span>
+            <strong id="ordersTotal">0</strong>
+          </div>
+          <div class="stat">
+            <span>Etiquetas pedidas</span>
+            <strong id="orderedLabelsTotal">0</strong>
+          </div>
+        </div>
+
+        <section class="tool-panel" aria-labelledby="estoqueTitle">
+          <div class="panel-head">
+            <div>
+              <h2 id="estoqueTitle">Estoque de etiquetas</h2>
+              <p class="panel-copy">Acompanhe quantidades, salve a contagem e copie um resumo quando precisar.</p>
+            </div>
+          </div>
+
+          <div class="inventory-list" id="stockGrid"></div>
+
+          <div class="actions">
+            <button type="button" class="btn btn-primary" id="saveStock" aria-label="Salvar estoque" title="Salvar estoque" data-tooltip="Salvar estoque">
+              <svg class="icon" aria-hidden="true"><use href="#icon-save"></use></svg>
+            </button>
+            <button type="button" class="btn btn-secondary" id="restoreStock" aria-label="Restaurar estoque" title="Restaurar estoque" data-tooltip="Restaurar estoque">
+              <svg class="icon" aria-hidden="true"><use href="#icon-rotate"></use></svg>
+            </button>
+            <button type="button" class="btn btn-secondary" id="copyStockReport" aria-label="Copiar relat&oacute;rio" title="Copiar relat&oacute;rio" data-tooltip="Copiar relat&oacute;rio">
+              <svg class="icon" aria-hidden="true"><use href="#icon-copy"></use></svg>
+            </button>
+          </div>
+        </section>
+      </section>
+
+      <section class="view" id="pedidosView" data-view="pedidos">
+        <section class="tool-panel" aria-labelledby="pedidosTitle">
+          <div class="panel-head">
+            <div>
+              <h2 id="pedidosTitle">Pedidos de etiquetas</h2>
+              <p class="panel-copy">Registre cada pedido manual e mantenha o hist&oacute;rico organizado.</p>
+            </div>
+          </div>
+
+          <div class="day-strip">
+            <label for="diaInput">Dia do pedido</label>
+            <input type="text" id="diaInput" placeholder="00.00.00" maxlength="8" inputmode="numeric" autocomplete="off" />
+          </div>
+
+          <div id="duplicateNotice" class="notice error" role="alert"></div>
+
+          <form class="order-form" id="orderForm">
+            <div class="field" id="nomeField">
+              <label for="nome">Nome da pessoa</label>
+              <input type="text" id="nome" placeholder="Digite o nome" autocomplete="off" required />
+            </div>
+
+            <div class="field">
+              <label for="cor">Cor da etiqueta</label>
+              <select id="cor" required>
+                <option value="">Selecione</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="quantidade">Quantidade</label>
+              <input type="number" id="quantidade" placeholder="1200 a 2500" min="1200" max="2500" required />
+            </div>
+
+            <div class="field">
+              <label for="rolos">Rolos</label>
+              <input type="number" id="rolos" placeholder="Ex: 3" min="1" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="saveOrder" aria-label="Gravar pedido" title="Gravar pedido" data-tooltip="Gravar pedido">
+              <svg class="icon" aria-hidden="true"><use href="#icon-plus"></use></svg>
+            </button>
+          </form>
+        </section>
+
+        <section class="tool-panel" aria-labelledby="historicoTitle">
+          <div class="history-head">
+            <div>
+              <h2 id="historicoTitle">Hist&oacute;rico</h2>
+              <p class="counter" id="counter">0 pedidos salvos</p>
+            </div>
+
+            <div class="history-actions">
+              <button type="button" class="btn btn-secondary" id="downloadReport" aria-label="Salvar relat&oacute;rio" title="Salvar relat&oacute;rio" data-tooltip="Salvar relat&oacute;rio">
+                <svg class="icon" aria-hidden="true"><use href="#icon-download"></use></svg>
+              </button>
+              <button type="button" class="btn btn-danger" id="clearHistory" aria-label="Limpar hist&oacute;rico" title="Limpar hist&oacute;rico" data-tooltip="Limpar hist&oacute;rico">
+                <svg class="icon" aria-hidden="true"><use href="#icon-trash"></use></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="order-list" id="orderList"></div>
+        </section>
+      </section>
+    </main>
+
+    <p class="footer">&copy; Lopsz 2026 / Wal Artes Gr&aacute;ficas</p>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const STOCK_KEY = "estoque_etiquetas_v1";
+    const HISTORY_KEY = "historicoEtiquetas";
+    const DAY_KEY = "diaDatabase";
+    const THEME_KEY = "daty_theme";
+    const LOW_STOCK_LIMIT = 4;
+
+    const stockItems = [
+      { key: "azuis", name: "AZUIS", orderName: "Azul", color: "#61d9ff" },
+      { key: "rosa", name: "ROSA", orderName: "Rosa", color: "#efadb7" },
+      { key: "branca", name: "BRANCA", orderName: "Branco", color: "#f2f2f2" },
+      { key: "verde", name: "VERDE", orderName: "Verde", color: "#3fd06c" },
+      { key: "amarelo", name: "AMARELO", orderName: "Amarelo", color: "#ffee00" },
+      { key: "roxo", name: "ROXO", orderName: "Roxo", color: "#7c3aed" },
+      { key: "branca_pequena", name: "BRANCA PEQUENA", detail: "Etiqueta menor", orderName: "Branca pequena", color: "#f2f2f2", small: true },
+      { key: "ribbon", name: "RIBBON", orderName: "Ribbon", ribbon: true }
+    ];
+
+    const stockDefault = stockItems.reduce((acc, item) => {
+      acc[item.key] = 0;
+      return acc;
+    }, {});
+
+    const colorByOrder = stockItems.reduce((acc, item) => {
+      acc[item.orderName] = item.color || "#1d1d1f";
+      return acc;
+    }, {});
+
+    const elements = {
+      horaAtual: document.getElementById("horaAtual"),
+      stockGrid: document.getElementById("stockGrid"),
+      stockTotal: document.getElementById("stockTotal"),
+      lowStockTotal: document.getElementById("lowStockTotal"),
+      ordersTotal: document.getElementById("ordersTotal"),
+      orderedLabelsTotal: document.getElementById("orderedLabelsTotal"),
+      saveStock: document.getElementById("saveStock"),
+      restoreStock: document.getElementById("restoreStock"),
+      copyStockReport: document.getElementById("copyStockReport"),
+      diaInput: document.getElementById("diaInput"),
+      orderForm: document.getElementById("orderForm"),
+      nomeInput: document.getElementById("nome"),
+      nomeField: document.getElementById("nomeField"),
+      corInput: document.getElementById("cor"),
+      quantidadeInput: document.getElementById("quantidade"),
+      rolosInput: document.getElementById("rolos"),
+      saveOrder: document.getElementById("saveOrder"),
+      duplicateNotice: document.getElementById("duplicateNotice"),
+      orderList: document.getElementById("orderList"),
+      counter: document.getElementById("counter"),
+      downloadReport: document.getElementById("downloadReport"),
+      clearHistory: document.getElementById("clearHistory"),
+      toast: document.getElementById("toast")
+    };
+
+    let historico = carregarHistorico();
+
+    function criarId() {
+      if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        return window.crypto.randomUUID();
+      }
+      return String(Date.now()) + "-" + Math.random().toString(16).slice(2);
+    }
+
+    function carregarHistorico() {
+      try {
+        const salvo = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+        let precisaSalvar = false;
+        const normalizado = salvo.map((item) => {
+          if (item.id) return item;
+          precisaSalvar = true;
+          return { ...item, id: criarId() };
+        });
+
+        if (precisaSalvar) {
+          localStorage.setItem(HISTORY_KEY, JSON.stringify(normalizado));
+        }
+
+        return normalizado;
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function salvarHistorico() {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(historico));
+    }
+
+    function formatarNumero(numero) {
+      return Number(numero || 0).toLocaleString("pt-BR");
+    }
+
+    function escaparTexto(texto) {
+      return String(texto || "");
+    }
+
+    function normalizarNome(nome) {
+      return String(nome || "")
+        .trim()
+        .replace(/\s+/g, " ")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLocaleLowerCase("pt-BR");
+    }
+
+    function nomeDuplicado(nome) {
+      const alvo = normalizarNome(nome);
+      if (!alvo) return false;
+      return historico.some((item) => normalizarNome(item.nome) === alvo);
+    }
+
+    function corTexto(hex) {
+      const valor = String(hex || "#111111").replace("#", "");
+      if (valor.length !== 6) return "#ffffff";
+      const r = parseInt(valor.slice(0, 2), 16);
+      const g = parseInt(valor.slice(2, 4), 16);
+      const b = parseInt(valor.slice(4, 6), 16);
+      const brilho = (r * 299 + g * 587 + b * 114) / 1000;
+      return brilho > 150 ? "#111111" : "#ffffff";
+    }
+
+    function mostrarToast(texto) {
+      elements.toast.textContent = texto;
+      elements.toast.classList.add("is-visible");
+      clearTimeout(window.datyToastTimer);
+      window.datyToastTimer = setTimeout(() => {
+        elements.toast.classList.remove("is-visible");
+      }, 2300);
+    }
+
+    function setTema(tema) {
+      document.documentElement.setAttribute("data-theme", tema);
+      localStorage.setItem(THEME_KEY, tema);
+      document.querySelectorAll("[data-theme-choice]").forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.themeChoice === tema);
+      });
+    }
+
+    function carregarTema() {
+      const salvo = localStorage.getItem(THEME_KEY);
+      if (salvo === "light" || salvo === "dark") {
+        setTema(salvo);
+        return;
+      }
+
+      const prefereEscuro = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      setTema(prefereEscuro ? "dark" : "light");
+    }
+
+    function atualizarHora() {
+      const agora = new Date();
+      elements.horaAtual.textContent = agora.toLocaleTimeString("pt-BR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+    }
+
+    function formatarDia(valor) {
+      let numeros = String(valor || "").replace(/\D/g, "").slice(0, 6);
+      if (numeros.length <= 2) return numeros;
+      if (numeros.length <= 4) return numeros.slice(0, 2) + "." + numeros.slice(2);
+      return numeros.slice(0, 2) + "." + numeros.slice(2, 4) + "." + numeros.slice(4, 6);
+    }
+
+    function renderizarOpcoesCor() {
+      stockItems.forEach((item) => {
+        const option = document.createElement("option");
+        option.value = item.orderName;
+        option.textContent = item.orderName;
+        elements.corInput.appendChild(option);
+      });
+    }
+
+    function renderizarEstoque() {
+      elements.stockGrid.innerHTML = "";
+
+      stockItems.forEach((item) => {
+        const row = document.createElement("div");
+        row.className = "inventory-row";
+        row.dataset.key = item.key;
+        row.style.setProperty("--stock-color", item.color || "#8e8e93");
+
+        row.innerHTML = [
+          '<div class="item-name"><span class="stock-kicker">Estoque</span><strong>' + item.name + '</strong>' + (item.detail ? '<small>' + item.detail + '</small>' : "") + '</div>',
+          '<input class="quantity-input" id="' + item.key + '" data-stock-input="' + item.key + '" type="number" min="0" value="0" inputmode="numeric" aria-label="Quantidade de ' + item.name + '" />'
+        ].join("");
+
+        elements.stockGrid.appendChild(row);
+      });
+
+      document.querySelectorAll("[data-stock-input]").forEach((input) => {
+        input.addEventListener("input", atualizarAvisosEstoque);
+        input.addEventListener("change", atualizarAvisosEstoque);
+      });
+    }
+
+    function getDadosEstoque() {
+      return stockItems.reduce((acc, item) => {
+        const input = document.getElementById(item.key);
+        acc[item.key] = Math.max(0, parseInt(input.value, 10) || 0);
+        return acc;
+      }, {});
+    }
+
+    function aplicarDadosEstoque(dados) {
+      stockItems.forEach((item) => {
+        const input = document.getElementById(item.key);
+        if (input) {
+          input.value = Number(dados[item.key] ?? 0);
+        }
+      });
+      atualizarAvisosEstoque();
+    }
+
+    function carregarEstoque() {
+      try {
+        const salvo = JSON.parse(localStorage.getItem(STOCK_KEY));
+        aplicarDadosEstoque({ ...stockDefault, ...(salvo || {}) });
+      } catch (error) {
+        aplicarDadosEstoque(stockDefault);
+      }
+    }
+
+    function salvarEstoque() {
+      localStorage.setItem(STOCK_KEY, JSON.stringify(getDadosEstoque()));
+      mostrarToast("Estoque salvo.");
+      atualizarAvisosEstoque();
+    }
+
+    function restaurarEstoque() {
+      if (!confirm("Deseja restaurar todas as quantidades para zero?")) return;
+      localStorage.setItem(STOCK_KEY, JSON.stringify(stockDefault));
+      aplicarDadosEstoque(stockDefault);
+      mostrarToast("Estoque restaurado.");
+    }
+
+    function atualizarAvisosEstoque() {
+      const dados = getDadosEstoque();
+      const baixos = stockItems.filter((item) => dados[item.key] <= LOW_STOCK_LIMIT);
+      const total = stockItems.reduce((acc, item) => acc + Number(dados[item.key] || 0), 0);
+
+      elements.stockTotal.textContent = formatarNumero(total);
+      elements.lowStockTotal.textContent = formatarNumero(baixos.length);
+
+      document.querySelectorAll(".inventory-row").forEach((row) => {
+        row.classList.toggle("is-low", dados[row.dataset.key] <= LOW_STOCK_LIMIT);
+      });
+
+      return baixos;
+    }
+
+    async function copiarTexto(texto) {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(texto);
+        return;
+      }
+
+      const area = document.createElement("textarea");
+      area.value = texto;
+      area.style.position = "fixed";
+      area.style.left = "-9999px";
+      document.body.appendChild(area);
+      area.focus();
+      area.select();
+      document.execCommand("copy");
+      document.body.removeChild(area);
+    }
+
+    function textoRelatorioEstoque() {
+      const dados = getDadosEstoque();
+      const linhas = ["RELATORIO DE ESTOQUE - DATY", ""];
+      let total = 0;
+
+      stockItems.forEach((item) => {
+        const qtd = Number(dados[item.key] || 0);
+        total += qtd;
+        linhas.push(item.name + ": " + qtd);
+      });
+
+      linhas.push("", "TOTAL: " + total + " unidades");
+      return linhas.join("\n");
+    }
+
+    async function copiarRelatorioEstoque() {
+      try {
+        await copiarTexto(textoRelatorioEstoque());
+        mostrarToast("Relatorio de estoque copiado.");
+      } catch (error) {
+        alert(textoRelatorioEstoque());
+      }
+    }
+
+    function atualizarEstadoDuplicado() {
+      const nome = elements.nomeInput.value.trim().replace(/\s+/g, " ");
+      const duplicado = nomeDuplicado(nome);
+
+      elements.nomeField.classList.toggle("has-error", duplicado);
+      elements.saveOrder.disabled = duplicado;
+
+      if (duplicado) {
+        elements.duplicateNotice.textContent = 'Pedido duplicado: "' + nome + '" ja existe no historico. Use outro nome para gravar.';
+        elements.duplicateNotice.classList.add("is-visible");
+      } else {
+        elements.duplicateNotice.textContent = "";
+        elements.duplicateNotice.classList.remove("is-visible");
+      }
+    }
+
+    function criarAmount(valor, rotulo) {
+      const div = document.createElement("div");
+      div.className = "amount";
+      div.textContent = formatarNumero(valor);
+
+      const span = document.createElement("span");
+      span.textContent = rotulo;
+      div.appendChild(span);
+
+      return div;
+    }
+
+    function renderizarHistorico() {
+      elements.orderList.innerHTML = "";
+      elements.counter.textContent = historico.length === 1 ? "1 pedido salvo" : formatarNumero(historico.length) + " pedidos salvos";
+
+      const totalEtiquetas = historico.reduce((acc, item) => acc + Number(item.quantidade || 0), 0);
+      elements.ordersTotal.textContent = formatarNumero(historico.length);
+      elements.orderedLabelsTotal.textContent = formatarNumero(totalEtiquetas);
+
+      if (historico.length === 0) {
+        const vazio = document.createElement("div");
+        vazio.className = "empty";
+        vazio.textContent = "Nenhum pedido gravado ainda.";
+        elements.orderList.appendChild(vazio);
+        atualizarEstadoDuplicado();
+        return;
+      }
+
+      historico.forEach((item) => {
+        const cor = colorByOrder[item.cor] || "#1d1d1f";
+        const article = document.createElement("article");
+        article.className = "order-item";
+        article.style.setProperty("--order-color", cor);
+        article.style.setProperty("--order-text", corTexto(cor));
+
+        const main = document.createElement("div");
+        main.className = "order-main";
+
+        const strong = document.createElement("strong");
+        strong.textContent = escaparTexto(item.nome);
+        main.appendChild(strong);
+
+        const small = document.createElement("small");
+        small.textContent = "Dia: " + (item.dia || "Nao informado");
+        main.appendChild(small);
+
+        const colorWrap = document.createElement("div");
+        const colorTag = document.createElement("span");
+        colorTag.className = "color-pill";
+        colorTag.textContent = escaparTexto(item.cor);
+        colorWrap.appendChild(colorTag);
+
+        const meta = document.createElement("div");
+        meta.className = "order-meta";
+        meta.textContent = "Gravado";
+
+        const hora = document.createElement("small");
+        hora.textContent = item.hora || "Sem horario";
+        meta.appendChild(hora);
+
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "remove-order";
+        remove.dataset.removeOrder = item.id;
+        remove.setAttribute("aria-label", "Remover pedido");
+        remove.setAttribute("title", "Remover pedido");
+        remove.setAttribute("data-tooltip", "Remover pedido");
+        remove.innerHTML = '<svg class="icon" aria-hidden="true"><use href="#icon-x"></use></svg>';
+
+        article.appendChild(main);
+        article.appendChild(colorWrap);
+        article.appendChild(criarAmount(item.quantidade, "etiquetas"));
+        article.appendChild(criarAmount(item.rolos, "rolos"));
+        article.appendChild(meta);
+        article.appendChild(remove);
+        elements.orderList.appendChild(article);
+      });
+
+      atualizarEstadoDuplicado();
+    }
+
+    function gerarTextoRelatorioPedidos() {
+      const agora = new Date();
+      const dataRelatorio = agora.toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
+      const horaRelatorio = agora.toLocaleTimeString("pt-BR", {
+        timeZone: "America/Sao_Paulo",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+
+      const totalEtiquetas = historico.reduce((acc, item) => acc + Number(item.quantidade || 0), 0);
+      const totalRolos = historico.reduce((acc, item) => acc + Number(item.rolos || 0), 0);
+
+      const linhas = [
+        "RELATORIO DE PEDIDOS - DATY",
+        "===========================",
+        "",
+        "Gerado em: " + dataRelatorio + " as " + horaRelatorio,
+        "Total de pedidos: " + historico.length,
+        "Total de etiquetas: " + formatarNumero(totalEtiquetas),
+        "Total de rolos: " + formatarNumero(totalRolos),
+        "",
+        "PEDIDOS",
+        "-------",
+        ""
+      ];
+
+      historico.forEach((item, index) => {
+        linhas.push(String(index + 1) + ". " + item.nome);
+        linhas.push("Dia: " + (item.dia || "Nao informado"));
+        linhas.push("Cor da etiqueta: " + item.cor);
+        linhas.push("Quantidade de etiquetas: " + formatarNumero(item.quantidade));
+        linhas.push("Quantidade de rolos: " + formatarNumero(item.rolos));
+        linhas.push("Gravado as: " + (item.hora || "Sem horario"));
+        linhas.push("-----------------------------");
+      });
+
+      return linhas.join("\n");
+    }
+
+    function baixarRelatorioPedidos() {
+      if (historico.length === 0) {
+        alert("Nao ha pedidos para salvar no relatorio.");
+        return;
+      }
+
+      const texto = gerarTextoRelatorioPedidos();
+      const arquivo = new Blob([texto], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(arquivo);
+      const link = document.createElement("a");
+      const data = new Date().toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" }).replace(/\//g, "-");
+
+      link.href = url;
+      link.download = "relatorio-daty-" + data + ".txt";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      mostrarToast("Relatorio salvo.");
+    }
+
+    function limparHistorico() {
+      if (!confirm("Tem certeza que deseja limpar todo o historico?")) return;
+      historico = [];
+      salvarHistorico();
+      renderizarHistorico();
+      mostrarToast("Historico limpo.");
+    }
+
+    function removerPedido(id) {
+      const pedido = historico.find((item) => item.id === id);
+      if (!pedido) return;
+      if (!confirm('Remover o pedido de "' + pedido.nome + '"?')) return;
+
+      historico = historico.filter((item) => item.id !== id);
+      salvarHistorico();
+      renderizarHistorico();
+      mostrarToast("Pedido removido.");
+    }
+
+    function gravarPedido(event) {
+      event.preventDefault();
+
+      const nome = elements.nomeInput.value.trim().replace(/\s+/g, " ");
+      const cor = elements.corInput.value;
+      const quantidade = Number(elements.quantidadeInput.value);
+      const rolos = Number(elements.rolosInput.value);
+      const dia = elements.diaInput.value.trim();
+
+      if (!nome || !cor || !quantidade || !rolos) {
+        alert("Preencha todos os campos antes de gravar.");
+        return;
+      }
+
+      if (dia.length !== 8) {
+        alert("Preencha o dia no formato 00.00.00.");
+        elements.diaInput.focus();
+        return;
+      }
+
+      if (nomeDuplicado(nome)) {
+        atualizarEstadoDuplicado();
+        elements.nomeInput.focus();
+        mostrarToast("Pedido bloqueado por nome duplicado.");
+        return;
+      }
+
+      if (quantidade < 1200 || quantidade > 2500) {
+        alert("A quantidade de etiquetas precisa estar entre 1200 e 2500.");
+        elements.quantidadeInput.focus();
+        return;
+      }
+
+      if (rolos < 1) {
+        alert("A quantidade de rolos precisa ser pelo menos 1.");
+        elements.rolosInput.focus();
+        return;
+      }
+
+      const agora = new Date();
+      const hora = agora.toLocaleTimeString("pt-BR", {
+        timeZone: "America/Sao_Paulo",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+
+      historico.unshift({
+        id: criarId(),
+        nome,
+        cor,
+        quantidade,
+        rolos,
+        dia,
+        hora
+      });
+
+      salvarHistorico();
+      renderizarHistorico();
+      elements.orderForm.reset();
+      elements.nomeInput.focus();
+      mostrarToast("Pedido gravado.");
+    }
+
+    function alternarView(view) {
+      document.querySelectorAll("[data-view]").forEach((section) => {
+        section.classList.toggle("is-active", section.dataset.view === view);
+      });
+
+      document.querySelectorAll("[data-view-target]").forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.viewTarget === view);
+      });
+    }
+
+    document.querySelectorAll("[data-theme-choice]").forEach((button) => {
+      button.addEventListener("click", () => setTema(button.dataset.themeChoice));
+    });
+
+    document.querySelectorAll("[data-view-target]").forEach((button) => {
+      button.addEventListener("click", () => alternarView(button.dataset.viewTarget));
+    });
+
+    elements.saveStock.addEventListener("click", salvarEstoque);
+    elements.restoreStock.addEventListener("click", restaurarEstoque);
+    elements.copyStockReport.addEventListener("click", copiarRelatorioEstoque);
+    elements.orderForm.addEventListener("submit", gravarPedido);
+    elements.downloadReport.addEventListener("click", baixarRelatorioPedidos);
+    elements.clearHistory.addEventListener("click", limparHistorico);
+
+    elements.diaInput.value = formatarDia(localStorage.getItem(DAY_KEY) || "");
+    elements.diaInput.addEventListener("input", () => {
+      elements.diaInput.value = formatarDia(elements.diaInput.value);
+      localStorage.setItem(DAY_KEY, elements.diaInput.value);
+    });
+
+    elements.nomeInput.addEventListener("input", atualizarEstadoDuplicado);
+    elements.orderList.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-remove-order]");
+      if (button) removerPedido(button.dataset.removeOrder);
+    });
+
+    carregarTema();
+    renderizarOpcoesCor();
+    renderizarEstoque();
+    carregarEstoque();
+    renderizarHistorico();
+    atualizarHora();
+    setInterval(atualizarHora, 1000);
+  </script>
+</body>
+</html>
