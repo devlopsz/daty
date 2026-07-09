@@ -628,39 +628,6 @@
       box-shadow: 0 0 0 4px color-mix(in srgb, var(--red), transparent 86%);
     }
 
-    .day-strip {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 18px;
-      padding: 14px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--surface-soft);
-      box-shadow: var(--inner-shadow);
-    }
-
-    .day-strip label {
-      color: var(--muted-strong);
-      font-size: 13px;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
-    .day-strip input {
-      width: 128px;
-      min-height: 44px;
-      padding: 0 13px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: var(--surface-strong);
-      color: var(--text);
-      outline: none;
-      font-size: 15px;
-      font-weight: 800;
-      font-variant-numeric: tabular-nums;
-    }
-
     .history-head {
       display: flex;
       align-items: flex-start;
@@ -905,15 +872,6 @@
         grid-column: auto;
       }
 
-      .day-strip {
-        align-items: stretch;
-        flex-direction: column;
-      }
-
-      .day-strip input {
-        width: 100%;
-      }
-
       .history-actions {
         justify-content: flex-start;
       }
@@ -1086,11 +1044,6 @@
             </div>
           </div>
 
-          <div class="day-strip">
-            <label for="diaInput">Dia do pedido</label>
-            <input type="text" id="diaInput" placeholder="00.00.00" maxlength="8" inputmode="numeric" autocomplete="off" />
-          </div>
-
           <div id="duplicateNotice" class="notice error" role="alert"></div>
 
           <form class="order-form" id="orderForm">
@@ -1152,7 +1105,6 @@
   <script>
     const STOCK_KEY = "estoque_etiquetas_v1";
     const HISTORY_KEY = "historicoEtiquetas";
-    const DAY_KEY = "diaDatabase";
     const THEME_KEY = "daty_theme";
     const LOW_STOCK_LIMIT = 4;
 
@@ -1187,7 +1139,6 @@
       saveStock: document.getElementById("saveStock"),
       restoreStock: document.getElementById("restoreStock"),
       copyStockReport: document.getElementById("copyStockReport"),
-      diaInput: document.getElementById("diaInput"),
       orderForm: document.getElementById("orderForm"),
       nomeInput: document.getElementById("nome"),
       nomeField: document.getElementById("nomeField"),
@@ -1306,11 +1257,12 @@
       });
     }
 
-    function formatarDia(valor) {
-      let numeros = String(valor || "").replace(/\D/g, "").slice(0, 6);
-      if (numeros.length <= 2) return numeros;
-      if (numeros.length <= 4) return numeros.slice(0, 2) + "." + numeros.slice(2);
-      return numeros.slice(0, 2) + "." + numeros.slice(2, 4) + "." + numeros.slice(4, 6);
+    function obterDiaAutomatico() {
+      return new Date().toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit"
+      }).replace(/\//g, ".");
     }
 
     function renderizarOpcoesCor() {
@@ -1626,16 +1578,10 @@
       const cor = elements.corInput.value;
       const quantidade = Number(elements.quantidadeInput.value);
       const rolos = Number(elements.rolosInput.value);
-      const dia = elements.diaInput.value.trim();
+      const dia = obterDiaAutomatico();
 
       if (!nome || !cor || !quantidade || !rolos) {
         alert("Preencha todos os campos antes de gravar.");
-        return;
-      }
-
-      if (dia.length !== 8) {
-        alert("Preencha o dia no formato 00.00.00.");
-        elements.diaInput.focus();
         return;
       }
 
@@ -1707,12 +1653,6 @@
     elements.orderForm.addEventListener("submit", gravarPedido);
     elements.downloadReport.addEventListener("click", baixarRelatorioPedidos);
     elements.clearHistory.addEventListener("click", limparHistorico);
-
-    elements.diaInput.value = formatarDia(localStorage.getItem(DAY_KEY) || "");
-    elements.diaInput.addEventListener("input", () => {
-      elements.diaInput.value = formatarDia(elements.diaInput.value);
-      localStorage.setItem(DAY_KEY, elements.diaInput.value);
-    });
 
     elements.nomeInput.addEventListener("input", atualizarEstadoDuplicado);
     elements.orderList.addEventListener("click", (event) => {
