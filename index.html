@@ -1061,7 +1061,23 @@
 
             <div class="field">
               <label for="quantidade">Quantidade</label>
-              <input type="number" id="quantidade" placeholder="1200 a 2500" min="1200" max="2500" required />
+              <select id="quantidade" required>
+                <option value="">Selecione</option>
+                <option value="1200">1.200</option>
+                <option value="1300">1.300</option>
+                <option value="1400">1.400</option>
+                <option value="1500">1.500</option>
+                <option value="1600">1.600</option>
+                <option value="1700">1.700</option>
+                <option value="1800">1.800</option>
+                <option value="1900">1.900</option>
+                <option value="2000">2.000</option>
+                <option value="2100">2.100</option>
+                <option value="2200">2.200</option>
+                <option value="2300">2.300</option>
+                <option value="2400">2.400</option>
+                <option value="2500">2.500</option>
+              </select>
             </div>
 
             <div class="field">
@@ -1106,15 +1122,13 @@
     const STOCK_KEY = "estoque_etiquetas_v1";
     const HISTORY_KEY = "historicoEtiquetas";
     const THEME_KEY = "daty_theme";
-    const LOW_STOCK_LIMIT = 4;
+    const ALERT_STOCK_QUANTITY = 1;
+    const ALERT_STOCK_KEYS = new Set(["branca", "amarelo", "branca_pequena", "ribbon"]);
 
     const stockItems = [
-      { key: "azuis", name: "AZUIS", orderName: "Azul", color: "#61d9ff" },
       { key: "rosa", name: "ROSA", orderName: "Rosa", color: "#efadb7" },
       { key: "branca", name: "BRANCA", orderName: "Branco", color: "#f2f2f2" },
-      { key: "verde", name: "VERDE", orderName: "Verde", color: "#3fd06c" },
       { key: "amarelo", name: "AMARELO", orderName: "Amarelo", color: "#ffee00" },
-      { key: "roxo", name: "ROXO", orderName: "Roxo", color: "#7c3aed" },
       { key: "branca_pequena", name: "BRANCA PEQUENA", detail: "Etiqueta menor", orderName: "Branca pequena", color: "#f2f2f2", small: true },
       { key: "ribbon", name: "RIBBON", orderName: "Ribbon", ribbon: true }
     ];
@@ -1339,14 +1353,19 @@
 
     function atualizarAvisosEstoque() {
       const dados = getDadosEstoque();
-      const baixos = stockItems.filter((item) => dados[item.key] <= LOW_STOCK_LIMIT);
+      const baixos = stockItems.filter((item) => {
+        return ALERT_STOCK_KEYS.has(item.key) && dados[item.key] === ALERT_STOCK_QUANTITY;
+      });
       const total = stockItems.reduce((acc, item) => acc + Number(dados[item.key] || 0), 0);
 
       elements.stockTotal.textContent = formatarNumero(total);
       elements.lowStockTotal.textContent = formatarNumero(baixos.length);
 
       document.querySelectorAll(".inventory-row").forEach((row) => {
-        row.classList.toggle("is-low", dados[row.dataset.key] <= LOW_STOCK_LIMIT);
+        row.classList.toggle(
+          "is-low",
+          ALERT_STOCK_KEYS.has(row.dataset.key) && dados[row.dataset.key] === ALERT_STOCK_QUANTITY
+        );
       });
 
       return baixos;
