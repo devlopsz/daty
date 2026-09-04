@@ -136,13 +136,14 @@
     }
 
     body::before {
-      inset: 0;
+      inset: -14px;
       z-index: -2;
       background-image: var(--site-bg-image);
       background-position: center;
       background-size: cover;
       opacity: var(--wallpaper-opacity);
-      filter: saturate(118%) contrast(103%);
+      filter: blur(7px) saturate(112%) contrast(103%);
+      transform: scale(1.02);
       transition: opacity 220ms ease;
     }
 
@@ -162,6 +163,29 @@
 
     html.has-custom-bg {
       --wallpaper-opacity: 0.92;
+    }
+
+    html.no-liquid-glass {
+      --surface: rgba(255, 255, 255, 0.86);
+      --surface-strong: rgba(255, 255, 255, 0.94);
+      --surface-soft: rgba(255, 255, 255, 0.76);
+      --surface-hover: rgba(255, 255, 255, 0.9);
+      --border: rgba(0, 0, 0, 0.08);
+      --border-strong: rgba(0, 0, 0, 0.16);
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
+      --shadow-soft: 0 10px 28px rgba(0, 0, 0, 0.09);
+      --liquid-blur: none;
+    }
+
+    html[data-theme="dark"].no-liquid-glass {
+      --surface: rgba(22, 22, 24, 0.9);
+      --surface-strong: rgba(34, 34, 37, 0.94);
+      --surface-soft: rgba(34, 34, 37, 0.82);
+      --surface-hover: rgba(46, 46, 50, 0.94);
+      --border: rgba(255, 255, 255, 0.12);
+      --border-strong: rgba(255, 255, 255, 0.22);
+      --shadow: 0 20px 52px rgba(0, 0, 0, 0.4);
+      --shadow-soft: 0 12px 34px rgba(0, 0, 0, 0.3);
     }
 
     button,
@@ -1193,6 +1217,61 @@
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.54), 0 8px 18px rgba(0, 0, 0, 0.08);
     }
 
+    html.no-liquid-glass .clock,
+    html.no-liquid-glass .theme-switch,
+    html.no-liquid-glass .segments,
+    html.no-liquid-glass .stat,
+    html.no-liquid-glass .tool-panel,
+    html.no-liquid-glass .inventory-row,
+    html.no-liquid-glass .btn,
+    html.no-liquid-glass .field input,
+    html.no-liquid-glass .field select,
+    html.no-liquid-glass .quantity-choice,
+    html.no-liquid-glass .history-search,
+    html.no-liquid-glass .order-item,
+    html.no-liquid-glass .remove-order,
+    html.no-liquid-glass .remove-stock,
+    html.no-liquid-glass .empty,
+    html.no-liquid-glass .toast,
+    html.no-liquid-glass .modal,
+    html.no-liquid-glass .color-sample {
+      background: var(--surface-strong);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    html.no-liquid-glass .clock::before,
+    html.no-liquid-glass .theme-switch::before,
+    html.no-liquid-glass .segments::before,
+    html.no-liquid-glass .stat::before,
+    html.no-liquid-glass .tool-panel::before,
+    html.no-liquid-glass .btn::before,
+    html.no-liquid-glass .quantity-choice::before,
+    html.no-liquid-glass .history-search::before,
+    html.no-liquid-glass .order-item::before,
+    html.no-liquid-glass .remove-order::before,
+    html.no-liquid-glass .remove-stock::before,
+    html.no-liquid-glass .empty::before,
+    html.no-liquid-glass .toast::before,
+    html.no-liquid-glass .modal::before,
+    html.no-liquid-glass .color-sample::before,
+    html.no-liquid-glass .inventory-row::after {
+      opacity: 0;
+    }
+
+    html.no-liquid-glass .btn-primary,
+    html.no-liquid-glass .quantity-choice.is-active {
+      background: var(--accent);
+      color: var(--accent-text);
+    }
+
+    html.no-liquid-glass .theme-switch button.is-active,
+    html.no-liquid-glass .segments button.is-active {
+      background: var(--surface-hover);
+      color: var(--text);
+    }
+
     [data-tooltip]::after {
       content: none !important;
       display: none !important;
@@ -1379,6 +1458,12 @@
       <circle cx="8.5" cy="10" r="1.5"></circle>
       <path d="m21 15-4.3-4.3a2 2 0 0 0-2.8 0L6 18"></path>
     </symbol>
+    <symbol id="icon-glass" viewBox="0 0 24 24">
+      <path d="M7 3h10l-1.2 8.7a3.8 3.8 0 0 1-7.6 0L7 3Z"></path>
+      <path d="M12 15v5"></path>
+      <path d="M9 21h6"></path>
+      <path d="M8 7h8"></path>
+    </symbol>
     <symbol id="icon-save" viewBox="0 0 24 24">
       <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"></path>
       <path d="M17 21v-8H7v8"></path>
@@ -1440,6 +1525,9 @@
             </button>
             <button type="button" data-theme-choice="dark" aria-label="Modo escuro" data-tooltip="Modo escuro">
               <svg class="icon" aria-hidden="true"><use href="#icon-moon"></use></svg>
+            </button>
+            <button type="button" class="is-active" id="toggleGlass" aria-label="Desativar liquid glass" aria-pressed="true" data-tooltip="Desativar liquid glass">
+              <svg class="icon" aria-hidden="true"><use href="#icon-glass"></use></svg>
             </button>
           </div>
         </div>
@@ -1610,6 +1698,10 @@
     const HISTORY_KEY = "historicoEtiquetas";
     const THEME_KEY = "daty_theme";
     const BACKGROUND_KEY = "daty_background_image_v1";
+    const BACKGROUND_DB = "daty_background_db_v1";
+    const BACKGROUND_STORE = "backgrounds";
+    const BACKGROUND_ID = "site";
+    const LIQUID_GLASS_KEY = "daty_liquid_glass";
     const ALERT_STOCK_QUANTITY = 1;
     const ALERT_STOCK_NAMES = new Set(["branco", "branca pequena", "amarelo", "ribbon"]);
     const ORDER_QUANTITIES = [1200, 2500];
@@ -1630,6 +1722,7 @@
       changeBackground: document.getElementById("changeBackground"),
       removeBackground: document.getElementById("removeBackground"),
       backgroundInput: document.getElementById("backgroundInput"),
+      toggleGlass: document.getElementById("toggleGlass"),
       statsGrid: document.getElementById("statsGrid"),
       stockGrid: document.getElementById("stockGrid"),
       addStockColor: document.getElementById("addStockColor"),
@@ -1662,6 +1755,7 @@
     let historico = carregarHistorico();
     let tooltipElement = null;
     let tooltipTarget = null;
+    let backgroundObjectUrl = null;
 
     function criarId() {
       if (window.crypto && typeof window.crypto.randomUUID === "function") {
@@ -1842,20 +1936,125 @@
       setTema(prefereEscuro ? "dark" : "light");
     }
 
+    function setLiquidGlass(ativo) {
+      const ligado = Boolean(ativo);
+      document.documentElement.classList.toggle("no-liquid-glass", !ligado);
+      localStorage.setItem(LIQUID_GLASS_KEY, ligado ? "on" : "off");
+      elements.toggleGlass.classList.toggle("is-active", ligado);
+      elements.toggleGlass.setAttribute("aria-pressed", ligado ? "true" : "false");
+      elements.toggleGlass.setAttribute("aria-label", ligado ? "Desativar liquid glass" : "Ativar liquid glass");
+      elements.toggleGlass.dataset.tooltip = ligado ? "Desativar liquid glass" : "Ativar liquid glass";
+    }
+
+    function carregarLiquidGlass() {
+      setLiquidGlass(localStorage.getItem(LIQUID_GLASS_KEY) !== "off");
+    }
+
+    function abrirBancoFundo() {
+      return new Promise((resolve, reject) => {
+        if (!("indexedDB" in window)) {
+          reject(new Error("IndexedDB indisponivel"));
+          return;
+        }
+
+        const request = indexedDB.open(BACKGROUND_DB, 1);
+        request.onupgradeneeded = () => {
+          const db = request.result;
+          if (!db.objectStoreNames.contains(BACKGROUND_STORE)) {
+            db.createObjectStore(BACKGROUND_STORE, { keyPath: "id" });
+          }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error || new Error("Nao foi possivel abrir o banco de fundo."));
+      });
+    }
+
+    async function lerFundoGrande() {
+      const db = await abrirBancoFundo();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(BACKGROUND_STORE, "readonly");
+        const request = transaction.objectStore(BACKGROUND_STORE).get(BACKGROUND_ID);
+        request.onsuccess = () => resolve(request.result || null);
+        request.onerror = () => reject(request.error || new Error("Nao foi possivel ler o fundo."));
+        transaction.oncomplete = () => db.close();
+        transaction.onerror = () => {
+          db.close();
+          reject(transaction.error || new Error("Nao foi possivel ler o fundo."));
+        };
+      });
+    }
+
+    async function salvarFundoGrande(arquivo) {
+      const db = await abrirBancoFundo();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(BACKGROUND_STORE, "readwrite");
+        transaction.objectStore(BACKGROUND_STORE).put({
+          id: BACKGROUND_ID,
+          blob: arquivo,
+          name: arquivo.name,
+          type: arquivo.type,
+          size: arquivo.size,
+          updatedAt: Date.now()
+        });
+        transaction.oncomplete = () => {
+          db.close();
+          resolve();
+        };
+        transaction.onerror = () => {
+          db.close();
+          reject(transaction.error || new Error("Nao foi possivel salvar o fundo."));
+        };
+      });
+    }
+
+    async function apagarFundoGrande() {
+      const db = await abrirBancoFundo();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(BACKGROUND_STORE, "readwrite");
+        transaction.objectStore(BACKGROUND_STORE).delete(BACKGROUND_ID);
+        transaction.oncomplete = () => {
+          db.close();
+          resolve();
+        };
+        transaction.onerror = () => {
+          db.close();
+          reject(transaction.error || new Error("Nao foi possivel apagar o fundo."));
+        };
+      });
+    }
+
     function aplicarFundoSite(imagem) {
+      if (backgroundObjectUrl && backgroundObjectUrl !== imagem) {
+        URL.revokeObjectURL(backgroundObjectUrl);
+        backgroundObjectUrl = null;
+      }
+
       if (!imagem) {
         document.documentElement.style.removeProperty("--site-bg-image");
         document.documentElement.classList.remove("has-custom-bg");
         return;
       }
 
+      if (String(imagem).startsWith("blob:")) {
+        backgroundObjectUrl = imagem;
+      }
+
       document.documentElement.style.setProperty("--site-bg-image", 'url("' + String(imagem).replace(/"/g, '\\"') + '")');
       document.documentElement.classList.add("has-custom-bg");
     }
 
-    function carregarFundoSite() {
+    async function carregarFundoSite() {
       try {
-        aplicarFundoSite(localStorage.getItem(BACKGROUND_KEY));
+        const registro = await lerFundoGrande();
+        if (registro && registro.blob) {
+          aplicarFundoSite(URL.createObjectURL(registro.blob));
+          return;
+        }
+      } catch (error) {
+      }
+
+      try {
+        aplicarFundoSite(localStorage.getItem(BACKGROUND_KEY) || "");
       } catch (error) {
         aplicarFundoSite("");
       }
@@ -1865,9 +2064,13 @@
       elements.backgroundInput.click();
     }
 
-    function removerFundoSite() {
+    async function removerFundoSite() {
       try {
         localStorage.removeItem(BACKGROUND_KEY);
+      } catch (error) {}
+
+      try {
+        await apagarFundoGrande();
       } catch (error) {}
 
       aplicarFundoSite("");
@@ -1875,7 +2078,7 @@
       mostrarToast("Fundo removido.");
     }
 
-    function alterarFundoSite(event) {
+    async function alterarFundoSite(event) {
       const arquivo = event.target.files && event.target.files[0];
       if (!arquivo) return;
 
@@ -1885,21 +2088,17 @@
         return;
       }
 
-      const leitor = new FileReader();
-      leitor.addEventListener("load", () => {
-        const imagem = String(leitor.result || "");
-        aplicarFundoSite(imagem);
+      aplicarFundoSite(URL.createObjectURL(arquivo));
 
-        try {
-          localStorage.setItem(BACKGROUND_KEY, imagem);
-          mostrarToast("Fundo atualizado.");
-        } catch (error) {
-          alert("A imagem foi aplicada, mas e grande demais para salvar no navegador.");
-        }
+      try {
+        await salvarFundoGrande(arquivo);
+        localStorage.removeItem(BACKGROUND_KEY);
+        mostrarToast("Fundo atualizado.");
+      } catch (error) {
+        alert("A imagem foi aplicada, mas o navegador nao conseguiu salvar esse arquivo.");
+      }
 
-        elements.backgroundInput.value = "";
-      });
-      leitor.readAsDataURL(arquivo);
+      elements.backgroundInput.value = "";
     }
 
     function prepararTooltips() {
@@ -2613,6 +2812,9 @@
     elements.changeBackground.addEventListener("click", escolherFundoSite);
     elements.removeBackground.addEventListener("click", removerFundoSite);
     elements.backgroundInput.addEventListener("change", alterarFundoSite);
+    elements.toggleGlass.addEventListener("click", () => {
+      setLiquidGlass(document.documentElement.classList.contains("no-liquid-glass"));
+    });
     elements.orderForm.addEventListener("submit", gravarPedido);
     elements.downloadReport.addEventListener("click", baixarRelatorioPedidos);
     elements.clearHistory.addEventListener("click", limparHistorico);
@@ -2669,6 +2871,7 @@
     }, true);
 
     carregarTema();
+    carregarLiquidGlass();
     carregarFundoSite();
     setQuantidadePedido(selectedOrderQuantity);
     renderizarOpcoesCor();
