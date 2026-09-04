@@ -20,13 +20,21 @@
 
     :root {
       color-scheme: light dark;
-      --bg: #f5f5f7;
-      --surface: rgba(255, 255, 255, 0.74);
-      --surface-strong: rgba(255, 255, 255, 0.96);
-      --surface-soft: rgba(255, 255, 255, 0.58);
-      --surface-hover: rgba(255, 255, 255, 0.78);
-      --border: rgba(0, 0, 0, 0.075);
-      --border-strong: rgba(0, 0, 0, 0.14);
+      --site-bg-image: none;
+      --wallpaper-opacity: 0;
+      --wallpaper-scrim: rgba(255, 255, 255, 0.2);
+      --bg: #f6f7fb;
+      --surface: rgba(255, 255, 255, 0.27);
+      --surface-strong: rgba(255, 255, 255, 0.39);
+      --surface-soft: rgba(255, 255, 255, 0.18);
+      --surface-hover: rgba(255, 255, 255, 0.32);
+      --border: rgba(255, 255, 255, 0.34);
+      --border-strong: rgba(255, 255, 255, 0.58);
+      --glass-highlight: rgba(255, 255, 255, 0.72);
+      --glass-glow: rgba(0, 149, 255, 0.22);
+      --glass-pink: rgba(255, 84, 184, 0.2);
+      --glass-shadow: 0 30px 90px rgba(31, 35, 47, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.72), inset 0 -22px 40px rgba(255, 255, 255, 0.12);
+      --glass-shadow-soft: 0 18px 44px rgba(31, 35, 47, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.68), inset 0 -14px 28px rgba(255, 255, 255, 0.1);
       --text: #1d1d1f;
       --muted: #6e6e73;
       --muted-strong: #424245;
@@ -35,9 +43,9 @@
       --green: #15803d;
       --amber: #b45309;
       --red: #d70015;
-      --shadow: 0 30px 90px rgba(0, 0, 0, 0.11);
-      --shadow-soft: 0 14px 34px rgba(0, 0, 0, 0.08);
-      --inner-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+      --shadow: var(--glass-shadow);
+      --shadow-soft: var(--glass-shadow-soft);
+      --inner-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.58);
       --radius-xs: 14px;
       --radius-sm: 18px;
       --radius: 26px;
@@ -48,13 +56,19 @@
 
     html[data-theme="dark"] {
       color-scheme: dark;
+      --wallpaper-scrim: rgba(0, 0, 0, 0.22);
       --bg: #050506;
-      --surface: rgba(30, 30, 32, 0.76);
-      --surface-strong: rgba(42, 42, 45, 0.95);
-      --surface-soft: rgba(255, 255, 255, 0.07);
-      --surface-hover: rgba(255, 255, 255, 0.105);
-      --border: rgba(255, 255, 255, 0.10);
-      --border-strong: rgba(255, 255, 255, 0.20);
+      --surface: rgba(26, 27, 31, 0.36);
+      --surface-strong: rgba(39, 40, 47, 0.48);
+      --surface-soft: rgba(255, 255, 255, 0.105);
+      --surface-hover: rgba(255, 255, 255, 0.16);
+      --border: rgba(255, 255, 255, 0.16);
+      --border-strong: rgba(255, 255, 255, 0.32);
+      --glass-highlight: rgba(255, 255, 255, 0.32);
+      --glass-glow: rgba(28, 151, 255, 0.34);
+      --glass-pink: rgba(255, 84, 184, 0.25);
+      --glass-shadow: 0 30px 92px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.26), inset 0 -24px 46px rgba(255, 255, 255, 0.035);
+      --glass-shadow-soft: 0 18px 50px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -14px 32px rgba(255, 255, 255, 0.035);
       --text: #f5f5f7;
       --muted: #a1a1a6;
       --muted-strong: #d2d2d7;
@@ -63,9 +77,9 @@
       --green: #4ade80;
       --amber: #fbbf24;
       --red: #ff453a;
-      --shadow: 0 28px 80px rgba(0, 0, 0, 0.48);
-      --shadow-soft: 0 16px 44px rgba(0, 0, 0, 0.34);
-      --inner-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      --shadow: var(--glass-shadow);
+      --shadow-soft: var(--glass-shadow-soft);
+      --inner-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
     }
 
     * {
@@ -76,19 +90,57 @@
       margin: 0;
       min-height: 100vh;
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0) 34%),
-        linear-gradient(135deg, #fafafa 0%, var(--bg) 45%, #ededf0 100%);
+        linear-gradient(145deg, rgba(234, 246, 255, 0.96) 0%, rgba(250, 251, 255, 0.9) 32%, rgba(255, 232, 245, 0.92) 68%, rgba(240, 249, 255, 0.94) 100%);
       color: var(--text);
       font-family: var(--font-body);
       letter-spacing: 0;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
+      position: relative;
+      overflow-x: hidden;
+      isolation: isolate;
     }
 
     html[data-theme="dark"] body {
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0) 30%),
-        linear-gradient(135deg, #101012 0%, var(--bg) 48%, #17171a 100%);
+        linear-gradient(145deg, rgba(9, 21, 38, 0.98) 0%, rgba(5, 5, 8, 0.96) 46%, rgba(31, 12, 29, 0.94) 75%, rgba(13, 20, 34, 0.98) 100%);
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      pointer-events: none;
+    }
+
+    body::before {
+      inset: -34px;
+      z-index: -2;
+      background-image: var(--site-bg-image);
+      background-position: center;
+      background-size: cover;
+      opacity: var(--wallpaper-opacity);
+      filter: blur(24px) saturate(145%) contrast(104%);
+      transform: scale(1.06);
+      transition: opacity 220ms ease;
+    }
+
+    body::after {
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(180deg, var(--wallpaper-scrim), rgba(255, 255, 255, 0) 44%),
+        linear-gradient(135deg, rgba(0, 149, 255, 0.18), rgba(255, 255, 255, 0.08) 42%, rgba(255, 75, 180, 0.14) 100%);
+    }
+
+    html[data-theme="dark"] body::after {
+      background:
+        linear-gradient(180deg, var(--wallpaper-scrim), rgba(0, 0, 0, 0.12) 52%),
+        linear-gradient(135deg, rgba(0, 149, 255, 0.16), rgba(0, 0, 0, 0.12) 44%, rgba(255, 75, 180, 0.14) 100%);
+    }
+
+    html.has-custom-bg {
+      --wallpaper-opacity: 0.92;
     }
 
     button,
@@ -896,8 +948,10 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
+      overflow: auto;
       background: rgba(0, 0, 0, 0.36);
       backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
     }
 
     .modal-backdrop.is-visible {
@@ -906,6 +960,8 @@
 
     .modal {
       width: min(460px, 100%);
+      max-height: calc(100vh - 40px);
+      overflow: auto;
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       background: var(--surface-strong);
@@ -956,6 +1012,200 @@
       justify-content: flex-end;
       gap: 10px;
       margin-top: 4px;
+    }
+
+    .clock,
+    .theme-switch,
+    .segments,
+    .stat,
+    .tool-panel,
+    .inventory-row,
+    .btn,
+    .field input,
+    .field select,
+    .quantity-toggle,
+    .quantity-choice,
+    .history-search,
+    .order-item,
+    .amount,
+    .remove-order,
+    .remove-stock,
+    .empty,
+    .toast,
+    .modal,
+    .color-sample {
+      background:
+        linear-gradient(135deg, var(--glass-highlight), rgba(255, 255, 255, 0.04) 28%, var(--surface) 58%, rgba(255, 255, 255, 0.06)),
+        color-mix(in srgb, var(--surface), transparent 8%);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(38px) saturate(190%);
+      -webkit-backdrop-filter: blur(38px) saturate(190%);
+    }
+
+    .clock,
+    .theme-switch,
+    .segments,
+    .stat,
+    .tool-panel,
+    .inventory-row,
+    .btn,
+    .quantity-toggle,
+    .quantity-choice,
+    .history-search,
+    .order-item,
+    .amount,
+    .remove-order,
+    .remove-stock,
+    .empty,
+    .toast,
+    .modal,
+    .color-sample {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .clock::before,
+    .theme-switch::before,
+    .segments::before,
+    .stat::before,
+    .tool-panel::before,
+    .btn::before,
+    .quantity-toggle::before,
+    .quantity-choice::before,
+    .history-search::before,
+    .order-item::before,
+    .amount::before,
+    .remove-order::before,
+    .remove-stock::before,
+    .empty::before,
+    .toast::before,
+    .modal::before,
+    .color-sample::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background:
+        radial-gradient(120px 80px at 18% 18%, rgba(255, 255, 255, 0.66), transparent 58%),
+        radial-gradient(160px 100px at 92% 12%, var(--glass-glow), transparent 58%),
+        linear-gradient(112deg, rgba(255, 255, 255, 0.42), transparent 28%, transparent 58%, var(--glass-pink));
+      opacity: 0.72;
+      mix-blend-mode: screen;
+    }
+
+    .inventory-row::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background:
+        radial-gradient(140px 92px at 16% 15%, color-mix(in srgb, var(--stock-color) 42%, rgba(255, 255, 255, 0.46)), transparent 62%),
+        linear-gradient(112deg, rgba(255, 255, 255, 0.34), transparent 30%, transparent 62%, color-mix(in srgb, var(--stock-color) 28%, transparent));
+      opacity: 0.66;
+      mix-blend-mode: screen;
+    }
+
+    .clock > *,
+    .theme-switch > *,
+    .segments > *,
+    .stat > *,
+    .tool-panel > *,
+    .inventory-row > *,
+    .btn > *,
+    .quantity-toggle > *,
+    .quantity-choice > *,
+    .history-search > *,
+    .order-item > *,
+    .amount > *,
+    .remove-order > *,
+    .remove-stock > *,
+    .empty > *,
+    .toast > *,
+    .modal > *,
+    .color-sample > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn,
+    .theme-switch button,
+    .segments button,
+    .quantity-choice,
+    .remove-order,
+    .remove-stock {
+      border: 1px solid color-mix(in srgb, var(--border-strong), transparent 24%);
+    }
+
+    .btn-primary,
+    .quantity-choice.is-active {
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.54), color-mix(in srgb, var(--accent), transparent 10%) 42%, color-mix(in srgb, var(--accent), #ffffff 20%));
+      color: #ffffff;
+      box-shadow: 0 18px 38px color-mix(in srgb, var(--accent), transparent 62%), inset 0 1px 0 rgba(255, 255, 255, 0.66);
+    }
+
+    .btn-secondary,
+    .theme-switch button.is-active,
+    .segments button.is-active {
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.58), var(--surface-strong) 48%, rgba(255, 255, 255, 0.12));
+      color: var(--text);
+    }
+
+    .btn-danger,
+    .remove-order {
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.42), color-mix(in srgb, var(--red), transparent 82%) 52%, rgba(255, 255, 255, 0.08));
+      color: var(--red);
+      border-color: color-mix(in srgb, var(--red), transparent 48%);
+    }
+
+    .order-item {
+      border-left: 7px solid var(--order-color, var(--accent));
+    }
+
+    .color-pill {
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.54), 0 12px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    [data-tooltip]::after {
+      content: none !important;
+      display: none !important;
+    }
+
+    .floating-tooltip {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 120;
+      max-width: min(260px, calc(100vw - 24px));
+      padding: 8px 11px;
+      border: 1px solid var(--border-strong);
+      border-radius: 999px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.62), var(--surface-strong) 54%, rgba(255, 255, 255, 0.16));
+      color: var(--text);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      font-size: 12px;
+      font-weight: 760;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate3d(-999px, -999px, 0) scale(0.96);
+      transition: opacity 120ms ease, transform 120ms ease;
+    }
+
+    .floating-tooltip.is-visible {
+      opacity: 1;
+      transform: translate3d(var(--tooltip-x), var(--tooltip-y), 0) scale(1);
     }
 
     @media (max-width: 1080px) {
@@ -1103,6 +1353,11 @@
       <circle cx="11" cy="11" r="8"></circle>
       <path d="m21 21-4.35-4.35"></path>
     </symbol>
+    <symbol id="icon-image" viewBox="0 0 24 24">
+      <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+      <circle cx="8.5" cy="10" r="1.5"></circle>
+      <path d="m21 15-4.3-4.3a2 2 0 0 0-2.8 0L6 18"></path>
+    </symbol>
     <symbol id="icon-save" viewBox="0 0 24 24">
       <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"></path>
       <path d="M17 21v-8H7v8"></path>
@@ -1150,11 +1405,16 @@
             <strong id="horaAtual">00:00:00</strong>
           </div>
 
+          <button type="button" class="btn btn-secondary" id="changeBackground" aria-label="Mudar fundo" data-tooltip="Mudar fundo">
+            <svg class="icon" aria-hidden="true"><use href="#icon-image"></use></svg>
+          </button>
+          <input type="file" id="backgroundInput" accept="image/*" hidden />
+
           <div class="theme-switch" role="group" aria-label="Escolher tema">
-            <button type="button" data-theme-choice="light" aria-label="Modo claro" title="Modo claro" data-tooltip="Modo claro">
+            <button type="button" data-theme-choice="light" aria-label="Modo claro" data-tooltip="Modo claro">
               <svg class="icon" aria-hidden="true"><use href="#icon-sun"></use></svg>
             </button>
-            <button type="button" data-theme-choice="dark" aria-label="Modo escuro" title="Modo escuro" data-tooltip="Modo escuro">
+            <button type="button" data-theme-choice="dark" aria-label="Modo escuro" data-tooltip="Modo escuro">
               <svg class="icon" aria-hidden="true"><use href="#icon-moon"></use></svg>
             </button>
           </div>
@@ -1162,10 +1422,10 @@
       </div>
 
       <nav class="segments" aria-label="Alternar area do Daty">
-        <button type="button" class="is-active" data-view-target="estoque" aria-label="Estoque" title="Estoque" data-tooltip="Estoque">
+        <button type="button" class="is-active" data-view-target="estoque" aria-label="Estoque" data-tooltip="Estoque">
           <svg class="icon" aria-hidden="true"><use href="#icon-boxes"></use></svg>
         </button>
-        <button type="button" data-view-target="pedidos" aria-label="Relat&oacute;rio" title="Relat&oacute;rio" data-tooltip="Relat&oacute;rio">
+        <button type="button" data-view-target="pedidos" aria-label="Relat&oacute;rio" data-tooltip="Relat&oacute;rio">
           <svg class="icon" aria-hidden="true"><use href="#icon-list"></use></svg>
         </button>
       </nav>
@@ -1182,7 +1442,7 @@
               <p class="panel-copy">Acompanhe quantidades, salve a contagem e copie um resumo quando precisar.</p>
             </div>
             <div class="panel-actions">
-              <button type="button" class="btn btn-secondary" id="addStockColor" aria-label="Adicionar cor" title="Adicionar cor" data-tooltip="Adicionar cor">
+              <button type="button" class="btn btn-secondary" id="addStockColor" aria-label="Adicionar cor" data-tooltip="Adicionar cor">
                 <svg class="icon" aria-hidden="true"><use href="#icon-plus"></use></svg>
               </button>
             </div>
@@ -1191,13 +1451,13 @@
           <div class="inventory-list" id="stockGrid"></div>
 
           <div class="actions">
-            <button type="button" class="btn btn-primary" id="saveStock" aria-label="Salvar estoque" title="Salvar estoque" data-tooltip="Salvar estoque">
+            <button type="button" class="btn btn-primary" id="saveStock" aria-label="Salvar estoque" data-tooltip="Salvar estoque">
               <svg class="icon" aria-hidden="true"><use href="#icon-save"></use></svg>
             </button>
-            <button type="button" class="btn btn-secondary" id="restoreStock" aria-label="Restaurar estoque" title="Restaurar estoque" data-tooltip="Restaurar estoque">
+            <button type="button" class="btn btn-secondary" id="restoreStock" aria-label="Restaurar estoque" data-tooltip="Restaurar estoque">
               <svg class="icon" aria-hidden="true"><use href="#icon-rotate"></use></svg>
             </button>
-            <button type="button" class="btn btn-secondary" id="copyStockReport" aria-label="Copiar relat&oacute;rio" title="Copiar relat&oacute;rio" data-tooltip="Copiar relat&oacute;rio">
+            <button type="button" class="btn btn-secondary" id="copyStockReport" aria-label="Copiar relat&oacute;rio" data-tooltip="Copiar relat&oacute;rio">
               <svg class="icon" aria-hidden="true"><use href="#icon-copy"></use></svg>
             </button>
           </div>
@@ -1242,7 +1502,7 @@
               <input type="number" id="rolos" placeholder="Ex: 3" min="1" required />
             </div>
 
-            <button type="submit" class="btn btn-primary" id="saveOrder" aria-label="Gravar pedido" title="Gravar pedido" data-tooltip="Gravar pedido">
+            <button type="submit" class="btn btn-primary" id="saveOrder" aria-label="Gravar pedido" data-tooltip="Gravar pedido">
               <svg class="icon" aria-hidden="true"><use href="#icon-plus"></use></svg>
             </button>
           </form>
@@ -1256,10 +1516,10 @@
             </div>
 
             <div class="history-actions">
-              <button type="button" class="btn btn-secondary" id="downloadReport" aria-label="Salvar relat&oacute;rio" title="Salvar relat&oacute;rio" data-tooltip="Salvar relat&oacute;rio">
+              <button type="button" class="btn btn-secondary" id="downloadReport" aria-label="Salvar relat&oacute;rio" data-tooltip="Salvar relat&oacute;rio">
                 <svg class="icon" aria-hidden="true"><use href="#icon-download"></use></svg>
               </button>
-              <button type="button" class="btn btn-danger" id="clearHistory" aria-label="Limpar hist&oacute;rico" title="Limpar hist&oacute;rico" data-tooltip="Limpar hist&oacute;rico">
+              <button type="button" class="btn btn-danger" id="clearHistory" aria-label="Limpar hist&oacute;rico" data-tooltip="Limpar hist&oacute;rico">
                 <svg class="icon" aria-hidden="true"><use href="#icon-trash"></use></svg>
               </button>
             </div>
@@ -1270,7 +1530,7 @@
               <svg class="icon" aria-hidden="true"><use href="#icon-search"></use></svg>
               <input type="search" id="historySearch" placeholder="Pesquisar por nome, cor, unidades ou dia" autocomplete="off" />
             </div>
-            <button type="button" class="btn btn-secondary" id="clearSearch" aria-label="Limpar pesquisa" title="Limpar pesquisa" data-tooltip="Limpar pesquisa">
+            <button type="button" class="btn btn-secondary" id="clearSearch" aria-label="Limpar pesquisa" data-tooltip="Limpar pesquisa">
               <svg class="icon" aria-hidden="true"><use href="#icon-x"></use></svg>
             </button>
           </div>
@@ -1289,7 +1549,7 @@
     <section class="modal" role="dialog" aria-modal="true" aria-labelledby="colorModalTitle">
       <div class="modal-head">
         <h2 id="colorModalTitle">Adicionar cor</h2>
-        <button type="button" class="btn btn-secondary" id="closeColorModal" aria-label="Fechar" title="Fechar" data-tooltip="Fechar">
+        <button type="button" class="btn btn-secondary" id="closeColorModal" aria-label="Fechar" data-tooltip="Fechar">
           <svg class="icon" aria-hidden="true"><use href="#icon-x"></use></svg>
         </button>
       </div>
@@ -1309,10 +1569,10 @@
         </div>
 
         <div class="modal-actions">
-          <button type="button" class="btn btn-secondary" id="cancelColorModal" aria-label="Cancelar" title="Cancelar" data-tooltip="Cancelar">
+          <button type="button" class="btn btn-secondary" id="cancelColorModal" aria-label="Cancelar" data-tooltip="Cancelar">
             <svg class="icon" aria-hidden="true"><use href="#icon-x"></use></svg>
           </button>
-          <button type="submit" class="btn btn-primary" aria-label="Salvar cor" title="Salvar cor" data-tooltip="Salvar cor">
+          <button type="submit" class="btn btn-primary" aria-label="Salvar cor" data-tooltip="Salvar cor">
             <svg class="icon" aria-hidden="true"><use href="#icon-save"></use></svg>
           </button>
         </div>
@@ -1325,6 +1585,7 @@
     const STOCK_ITEMS_KEY = "daty_stock_items_v2";
     const HISTORY_KEY = "historicoEtiquetas";
     const THEME_KEY = "daty_theme";
+    const BACKGROUND_KEY = "daty_background_image_v1";
     const ALERT_STOCK_QUANTITY = 1;
     const ALERT_STOCK_NAMES = new Set(["branco", "branca pequena", "amarelo", "ribbon"]);
     const ORDER_QUANTITIES = [1200, 2500];
@@ -1342,6 +1603,8 @@
 
     const elements = {
       horaAtual: document.getElementById("horaAtual"),
+      changeBackground: document.getElementById("changeBackground"),
+      backgroundInput: document.getElementById("backgroundInput"),
       statsGrid: document.getElementById("statsGrid"),
       stockGrid: document.getElementById("stockGrid"),
       addStockColor: document.getElementById("addStockColor"),
@@ -1372,6 +1635,8 @@
     };
 
     let historico = carregarHistorico();
+    let tooltipElement = null;
+    let tooltipTarget = null;
 
     function criarId() {
       if (window.crypto && typeof window.crypto.randomUUID === "function") {
@@ -1552,6 +1817,113 @@
       setTema(prefereEscuro ? "dark" : "light");
     }
 
+    function aplicarFundoSite(imagem) {
+      if (!imagem) {
+        document.documentElement.style.removeProperty("--site-bg-image");
+        document.documentElement.classList.remove("has-custom-bg");
+        return;
+      }
+
+      document.documentElement.style.setProperty("--site-bg-image", 'url("' + String(imagem).replace(/"/g, '\\"') + '")');
+      document.documentElement.classList.add("has-custom-bg");
+    }
+
+    function carregarFundoSite() {
+      try {
+        aplicarFundoSite(localStorage.getItem(BACKGROUND_KEY));
+      } catch (error) {
+        aplicarFundoSite("");
+      }
+    }
+
+    function escolherFundoSite() {
+      elements.backgroundInput.click();
+    }
+
+    function alterarFundoSite(event) {
+      const arquivo = event.target.files && event.target.files[0];
+      if (!arquivo) return;
+
+      if (!arquivo.type.startsWith("image/")) {
+        alert("Escolha um arquivo de imagem.");
+        elements.backgroundInput.value = "";
+        return;
+      }
+
+      const leitor = new FileReader();
+      leitor.addEventListener("load", () => {
+        const imagem = String(leitor.result || "");
+        aplicarFundoSite(imagem);
+
+        try {
+          localStorage.setItem(BACKGROUND_KEY, imagem);
+          mostrarToast("Fundo atualizado.");
+        } catch (error) {
+          alert("A imagem foi aplicada, mas e grande demais para salvar no navegador.");
+        }
+
+        elements.backgroundInput.value = "";
+      });
+      leitor.readAsDataURL(arquivo);
+    }
+
+    function prepararTooltips() {
+      document.querySelectorAll("[data-tooltip][title]").forEach((item) => {
+        item.removeAttribute("title");
+      });
+    }
+
+    function getTooltipElement() {
+      if (tooltipElement) return tooltipElement;
+
+      tooltipElement = document.createElement("div");
+      tooltipElement.className = "floating-tooltip";
+      tooltipElement.setAttribute("role", "tooltip");
+      document.body.appendChild(tooltipElement);
+      return tooltipElement;
+    }
+
+    function posicionarTooltip(alvo) {
+      if (!alvo || !tooltipElement) return;
+
+      const rect = alvo.getBoundingClientRect();
+      const tooltip = tooltipElement;
+      const margin = 10;
+      const largura = tooltip.offsetWidth;
+      const altura = tooltip.offsetHeight;
+      const preferirAbaixo = Boolean(alvo.closest(".header-actions, .segments")) || rect.top < 78;
+      let left = rect.left + rect.width / 2 - largura / 2;
+      let top = preferirAbaixo ? rect.bottom + margin : rect.top - altura - margin;
+
+      if (top < 8) top = rect.bottom + margin;
+      if (top + altura > window.innerHeight - 8) top = Math.max(8, rect.top - altura - margin);
+      left = Math.min(Math.max(8, left), window.innerWidth - largura - 8);
+
+      tooltip.style.setProperty("--tooltip-x", left + "px");
+      tooltip.style.setProperty("--tooltip-y", top + "px");
+    }
+
+    function mostrarTooltip(alvo) {
+      if (!alvo || alvo.disabled) return;
+
+      const texto = alvo.dataset.tooltip;
+      if (!texto) return;
+
+      alvo.removeAttribute("title");
+      tooltipTarget = alvo;
+      const tooltip = getTooltipElement();
+      tooltip.textContent = texto;
+      posicionarTooltip(alvo);
+      tooltip.classList.add("is-visible");
+    }
+
+    function esconderTooltip() {
+      tooltipTarget = null;
+      if (tooltipElement) {
+        tooltipElement.classList.remove("is-visible");
+      }
+    }
+
     function atualizarHora() {
       const agora = new Date();
       elements.horaAtual.textContent = agora.toLocaleTimeString("pt-BR", {
@@ -1612,7 +1984,6 @@
         remove.className = "remove-stock";
         remove.dataset.removeStock = item.key;
         remove.setAttribute("aria-label", "Remover cor " + item.orderName);
-        remove.setAttribute("title", "Remover cor");
         remove.setAttribute("data-tooltip", "Remover cor");
         remove.innerHTML = '<svg class="icon" aria-hidden="true"><use href="#icon-x"></use></svg>';
 
@@ -1946,7 +2317,6 @@
         remove.className = "remove-order";
         remove.dataset.removeOrder = item.id;
         remove.setAttribute("aria-label", "Remover pedido");
-        remove.setAttribute("title", "Remover pedido");
         remove.setAttribute("data-tooltip", "Remover pedido");
         remove.innerHTML = '<svg class="icon" aria-hidden="true"><use href="#icon-x"></use></svg>';
 
@@ -2205,6 +2575,8 @@
     elements.restoreStock.addEventListener("click", restaurarEstoque);
     elements.copyStockReport.addEventListener("click", copiarRelatorioEstoque);
     elements.addStockColor.addEventListener("click", abrirModalCor);
+    elements.changeBackground.addEventListener("click", escolherFundoSite);
+    elements.backgroundInput.addEventListener("change", alterarFundoSite);
     elements.orderForm.addEventListener("submit", gravarPedido);
     elements.downloadReport.addEventListener("click", baixarRelatorioPedidos);
     elements.clearHistory.addEventListener("click", limparHistorico);
@@ -2238,13 +2610,36 @@
         fecharModalCor();
       }
     });
+    document.addEventListener("pointerover", (event) => {
+      const alvo = event.target.closest("[data-tooltip]");
+      if (alvo) mostrarTooltip(alvo);
+    });
+    document.addEventListener("pointerout", (event) => {
+      if (!tooltipTarget) return;
+      if (event.relatedTarget && tooltipTarget.contains(event.relatedTarget)) return;
+      esconderTooltip();
+    });
+    document.addEventListener("focusin", (event) => {
+      const alvo = event.target.closest("[data-tooltip]");
+      if (alvo) mostrarTooltip(alvo);
+    });
+    document.addEventListener("focusout", esconderTooltip);
+    document.addEventListener("click", esconderTooltip);
+    window.addEventListener("resize", () => {
+      if (tooltipTarget) posicionarTooltip(tooltipTarget);
+    });
+    document.addEventListener("scroll", () => {
+      if (tooltipTarget) posicionarTooltip(tooltipTarget);
+    }, true);
 
     carregarTema();
+    carregarFundoSite();
     setQuantidadePedido(selectedOrderQuantity);
     renderizarOpcoesCor();
     renderizarEstoque();
     carregarEstoque();
     renderizarHistorico();
+    prepararTooltips();
     atualizarHora();
     setInterval(atualizarHora, 1000);
   </script>
