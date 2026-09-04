@@ -455,7 +455,7 @@
       color: var(--muted);
       font-size: 12px;
       font-weight: 750;
-      text-transform: uppercase;
+      text-transform: none;
     }
 
     .stat strong {
@@ -645,15 +645,6 @@
 
     .inventory-row .item-name {
       padding-right: 48px;
-    }
-
-    .stock-kicker {
-      display: block;
-      margin-bottom: 10px;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 760;
-      text-transform: uppercase;
     }
 
     .item-name small {
@@ -1612,7 +1603,6 @@
           <div class="panel-head">
             <div>
               <h2 id="pedidosTitle">Pedidos de etiquetas</h2>
-              <p class="panel-copy">Registre cada pedido manual e mantenha o hist&oacute;rico organizado.</p>
             </div>
           </div>
 
@@ -1671,7 +1661,7 @@
           <div class="history-tools">
             <div class="history-search">
               <svg class="icon" aria-hidden="true"><use href="#icon-search"></use></svg>
-              <input type="search" id="historySearch" placeholder="Pesquisar por nome, cor, unidades ou dia" autocomplete="off" />
+              <input type="search" id="historySearch" placeholder="Pesquisar" autocomplete="off" />
             </div>
             <button type="button" class="btn btn-secondary" id="clearSearch" aria-label="Limpar pesquisa" data-tooltip="Limpar pesquisa">
               <svg class="icon" aria-hidden="true"><use href="#icon-x"></use></svg>
@@ -2254,11 +2244,6 @@
 
         const name = document.createElement("div");
         name.className = "item-name";
-
-        const kicker = document.createElement("span");
-        kicker.className = "stock-kicker";
-        kicker.textContent = "Estoque";
-        name.appendChild(kicker);
 
         const strong = document.createElement("strong");
         strong.textContent = item.name;
