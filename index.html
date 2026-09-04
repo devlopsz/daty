@@ -22,19 +22,21 @@
       color-scheme: light dark;
       --site-bg-image: none;
       --wallpaper-opacity: 0;
-      --wallpaper-scrim: rgba(255, 255, 255, 0.2);
-      --bg: #f6f7fb;
-      --surface: rgba(255, 255, 255, 0.27);
-      --surface-strong: rgba(255, 255, 255, 0.39);
-      --surface-soft: rgba(255, 255, 255, 0.18);
-      --surface-hover: rgba(255, 255, 255, 0.32);
-      --border: rgba(255, 255, 255, 0.34);
-      --border-strong: rgba(255, 255, 255, 0.58);
-      --glass-highlight: rgba(255, 255, 255, 0.72);
-      --glass-glow: rgba(0, 149, 255, 0.22);
-      --glass-pink: rgba(255, 84, 184, 0.2);
-      --glass-shadow: 0 30px 90px rgba(31, 35, 47, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.72), inset 0 -22px 40px rgba(255, 255, 255, 0.12);
-      --glass-shadow-soft: 0 18px 44px rgba(31, 35, 47, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.68), inset 0 -14px 28px rgba(255, 255, 255, 0.1);
+      --wallpaper-scrim: rgba(255, 255, 255, 0.26);
+      --bg: #eef6ff;
+      --surface: rgba(255, 255, 255, 0.19);
+      --surface-strong: rgba(255, 255, 255, 0.31);
+      --surface-soft: rgba(255, 255, 255, 0.15);
+      --surface-hover: rgba(255, 255, 255, 0.25);
+      --border: rgba(255, 255, 255, 0.42);
+      --border-strong: rgba(255, 255, 255, 0.66);
+      --glass-highlight: rgba(255, 255, 255, 0.74);
+      --glass-sheen: rgba(255, 255, 255, 0.36);
+      --glass-glow: rgba(0, 122, 255, 0.18);
+      --glass-pink: rgba(255, 45, 146, 0.13);
+      --liquid-blur: blur(24px) saturate(190%) contrast(104%) brightness(106%);
+      --glass-shadow: 0 22px 60px rgba(22, 29, 46, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.68), inset 0 -1px 0 rgba(255, 255, 255, 0.18), inset 0 -18px 36px rgba(255, 255, 255, 0.055);
+      --glass-shadow-soft: 0 12px 32px rgba(22, 29, 46, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.62), inset 0 -1px 0 rgba(255, 255, 255, 0.12);
       --text: #1d1d1f;
       --muted: #6e6e73;
       --muted-strong: #424245;
@@ -56,19 +58,21 @@
 
     html[data-theme="dark"] {
       color-scheme: dark;
-      --wallpaper-scrim: rgba(0, 0, 0, 0.22);
+      --wallpaper-scrim: rgba(0, 0, 0, 0.24);
       --bg: #050506;
-      --surface: rgba(26, 27, 31, 0.36);
-      --surface-strong: rgba(39, 40, 47, 0.48);
-      --surface-soft: rgba(255, 255, 255, 0.105);
-      --surface-hover: rgba(255, 255, 255, 0.16);
-      --border: rgba(255, 255, 255, 0.16);
-      --border-strong: rgba(255, 255, 255, 0.32);
-      --glass-highlight: rgba(255, 255, 255, 0.32);
-      --glass-glow: rgba(28, 151, 255, 0.34);
-      --glass-pink: rgba(255, 84, 184, 0.25);
-      --glass-shadow: 0 30px 92px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.26), inset 0 -24px 46px rgba(255, 255, 255, 0.035);
-      --glass-shadow-soft: 0 18px 50px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -14px 32px rgba(255, 255, 255, 0.035);
+      --surface: rgba(22, 23, 28, 0.32);
+      --surface-strong: rgba(38, 39, 47, 0.42);
+      --surface-soft: rgba(255, 255, 255, 0.08);
+      --surface-hover: rgba(255, 255, 255, 0.13);
+      --border: rgba(255, 255, 255, 0.18);
+      --border-strong: rgba(255, 255, 255, 0.34);
+      --glass-highlight: rgba(255, 255, 255, 0.3);
+      --glass-sheen: rgba(255, 255, 255, 0.16);
+      --glass-glow: rgba(64, 156, 255, 0.24);
+      --glass-pink: rgba(255, 69, 166, 0.18);
+      --liquid-blur: blur(26px) saturate(178%) contrast(106%) brightness(104%);
+      --glass-shadow: 0 24px 70px rgba(0, 0, 0, 0.46), inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 -1px 0 rgba(255, 255, 255, 0.08), inset 0 -18px 36px rgba(255, 255, 255, 0.025);
+      --glass-shadow-soft: 0 14px 42px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -1px 0 rgba(255, 255, 255, 0.06);
       --text: #f5f5f7;
       --muted: #a1a1a6;
       --muted-strong: #d2d2d7;
@@ -90,7 +94,7 @@
       margin: 0;
       min-height: 100vh;
       background:
-        linear-gradient(145deg, rgba(234, 246, 255, 0.96) 0%, rgba(250, 251, 255, 0.9) 32%, rgba(255, 232, 245, 0.92) 68%, rgba(240, 249, 255, 0.94) 100%);
+        linear-gradient(120deg, #9edbff 0%, #f4f8ff 22%, #ffffff 39%, #ffb5d9 63%, #67b8ff 100%);
       color: var(--text);
       font-family: var(--font-body);
       letter-spacing: 0;
@@ -103,7 +107,7 @@
 
     html[data-theme="dark"] body {
       background:
-        linear-gradient(145deg, rgba(9, 21, 38, 0.98) 0%, rgba(5, 5, 8, 0.96) 46%, rgba(31, 12, 29, 0.94) 75%, rgba(13, 20, 34, 0.98) 100%);
+        linear-gradient(120deg, #08192d 0%, #101114 34%, #25142a 68%, #073154 100%);
     }
 
     body::before,
@@ -114,14 +118,13 @@
     }
 
     body::before {
-      inset: -34px;
+      inset: 0;
       z-index: -2;
       background-image: var(--site-bg-image);
       background-position: center;
       background-size: cover;
       opacity: var(--wallpaper-opacity);
-      filter: blur(24px) saturate(145%) contrast(104%);
-      transform: scale(1.06);
+      filter: saturate(118%) contrast(103%);
       transition: opacity 220ms ease;
     }
 
@@ -129,14 +132,14 @@
       inset: 0;
       z-index: -1;
       background:
-        linear-gradient(180deg, var(--wallpaper-scrim), rgba(255, 255, 255, 0) 44%),
-        linear-gradient(135deg, rgba(0, 149, 255, 0.18), rgba(255, 255, 255, 0.08) 42%, rgba(255, 75, 180, 0.14) 100%);
+        linear-gradient(180deg, var(--wallpaper-scrim), rgba(255, 255, 255, 0.04) 48%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(0, 122, 255, 0.08) 42%, rgba(255, 45, 146, 0.1) 100%);
     }
 
     html[data-theme="dark"] body::after {
       background:
-        linear-gradient(180deg, var(--wallpaper-scrim), rgba(0, 0, 0, 0.12) 52%),
-        linear-gradient(135deg, rgba(0, 149, 255, 0.16), rgba(0, 0, 0, 0.12) 44%, rgba(255, 75, 180, 0.14) 100%);
+        linear-gradient(180deg, var(--wallpaper-scrim), rgba(0, 0, 0, 0.08) 54%),
+        linear-gradient(135deg, rgba(64, 156, 255, 0.14), rgba(0, 0, 0, 0.1) 44%, rgba(255, 45, 146, 0.12) 100%);
     }
 
     html.has-custom-bg {
@@ -1035,11 +1038,12 @@
     .modal,
     .color-sample {
       background:
-        linear-gradient(135deg, var(--glass-highlight), rgba(255, 255, 255, 0.04) 28%, var(--surface) 58%, rgba(255, 255, 255, 0.06)),
-        color-mix(in srgb, var(--surface), transparent 8%);
+        linear-gradient(180deg, color-mix(in srgb, var(--glass-highlight), transparent 42%), rgba(255, 255, 255, 0.018) 34%, color-mix(in srgb, var(--surface), transparent 14%) 100%),
+        color-mix(in srgb, var(--surface), transparent 4%);
+      border-color: color-mix(in srgb, var(--border), transparent 8%);
       box-shadow: var(--shadow-soft);
-      backdrop-filter: blur(38px) saturate(190%);
-      -webkit-backdrop-filter: blur(38px) saturate(190%);
+      backdrop-filter: var(--liquid-blur);
+      -webkit-backdrop-filter: var(--liquid-blur);
     }
 
     .clock,
@@ -1088,10 +1092,10 @@
       border-radius: inherit;
       pointer-events: none;
       background:
-        radial-gradient(120px 80px at 18% 18%, rgba(255, 255, 255, 0.66), transparent 58%),
-        radial-gradient(160px 100px at 92% 12%, var(--glass-glow), transparent 58%),
-        linear-gradient(112deg, rgba(255, 255, 255, 0.42), transparent 28%, transparent 58%, var(--glass-pink));
-      opacity: 0.72;
+        linear-gradient(150deg, rgba(255, 255, 255, 0.58), transparent 20%, transparent 72%, rgba(255, 255, 255, 0.09)),
+        radial-gradient(90px 48px at 24% 7%, var(--glass-sheen), transparent 76%),
+        radial-gradient(110px 62px at 82% 13%, var(--glass-glow), transparent 78%);
+      opacity: 0.52;
       mix-blend-mode: screen;
     }
 
@@ -1103,9 +1107,9 @@
       border-radius: inherit;
       pointer-events: none;
       background:
-        radial-gradient(140px 92px at 16% 15%, color-mix(in srgb, var(--stock-color) 42%, rgba(255, 255, 255, 0.46)), transparent 62%),
-        linear-gradient(112deg, rgba(255, 255, 255, 0.34), transparent 30%, transparent 62%, color-mix(in srgb, var(--stock-color) 28%, transparent));
-      opacity: 0.66;
+        radial-gradient(180px 92px at 18% 0%, color-mix(in srgb, var(--stock-color) 18%, rgba(255, 255, 255, 0.32)), transparent 72%),
+        linear-gradient(146deg, rgba(255, 255, 255, 0.24), transparent 24%, transparent 78%, color-mix(in srgb, var(--stock-color) 14%, transparent));
+      opacity: 0.44;
       mix-blend-mode: screen;
     }
 
@@ -1137,29 +1141,30 @@
     .quantity-choice,
     .remove-order,
     .remove-stock {
-      border: 1px solid color-mix(in srgb, var(--border-strong), transparent 24%);
+      border: 1px solid color-mix(in srgb, var(--border-strong), transparent 14%);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.54), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
     }
 
     .btn-primary,
     .quantity-choice.is-active {
       background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.54), color-mix(in srgb, var(--accent), transparent 10%) 42%, color-mix(in srgb, var(--accent), #ffffff 20%));
+        linear-gradient(180deg, rgba(255, 255, 255, 0.44), color-mix(in srgb, var(--accent), transparent 12%) 36%, color-mix(in srgb, var(--accent), #ffffff 10%));
       color: #ffffff;
-      box-shadow: 0 18px 38px color-mix(in srgb, var(--accent), transparent 62%), inset 0 1px 0 rgba(255, 255, 255, 0.66);
+      box-shadow: 0 12px 30px color-mix(in srgb, var(--accent), transparent 68%), inset 0 1px 0 rgba(255, 255, 255, 0.58), inset 0 -1px 0 rgba(255, 255, 255, 0.14);
     }
 
     .btn-secondary,
     .theme-switch button.is-active,
     .segments button.is-active {
       background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.58), var(--surface-strong) 48%, rgba(255, 255, 255, 0.12));
+        linear-gradient(180deg, rgba(255, 255, 255, 0.38), color-mix(in srgb, var(--surface-strong), transparent 10%) 56%, rgba(255, 255, 255, 0.08));
       color: var(--text);
     }
 
     .btn-danger,
     .remove-order {
       background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.42), color-mix(in srgb, var(--red), transparent 82%) 52%, rgba(255, 255, 255, 0.08));
+        linear-gradient(180deg, rgba(255, 255, 255, 0.32), color-mix(in srgb, var(--red), transparent 86%) 56%, rgba(255, 255, 255, 0.06));
       color: var(--red);
       border-color: color-mix(in srgb, var(--red), transparent 48%);
     }
@@ -1169,7 +1174,7 @@
     }
 
     .color-pill {
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.54), 0 12px 24px rgba(0, 0, 0, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.54), 0 8px 18px rgba(0, 0, 0, 0.08);
     }
 
     [data-tooltip]::after {
@@ -1408,6 +1413,9 @@
           <button type="button" class="btn btn-secondary" id="changeBackground" aria-label="Mudar fundo" data-tooltip="Mudar fundo">
             <svg class="icon" aria-hidden="true"><use href="#icon-image"></use></svg>
           </button>
+          <button type="button" class="btn btn-secondary" id="removeBackground" aria-label="Tirar fundo" data-tooltip="Tirar fundo">
+            <svg class="icon" aria-hidden="true"><use href="#icon-x"></use></svg>
+          </button>
           <input type="file" id="backgroundInput" accept="image/*" hidden />
 
           <div class="theme-switch" role="group" aria-label="Escolher tema">
@@ -1604,6 +1612,7 @@
     const elements = {
       horaAtual: document.getElementById("horaAtual"),
       changeBackground: document.getElementById("changeBackground"),
+      removeBackground: document.getElementById("removeBackground"),
       backgroundInput: document.getElementById("backgroundInput"),
       statsGrid: document.getElementById("statsGrid"),
       stockGrid: document.getElementById("stockGrid"),
@@ -1838,6 +1847,16 @@
 
     function escolherFundoSite() {
       elements.backgroundInput.click();
+    }
+
+    function removerFundoSite() {
+      try {
+        localStorage.removeItem(BACKGROUND_KEY);
+      } catch (error) {}
+
+      aplicarFundoSite("");
+      elements.backgroundInput.value = "";
+      mostrarToast("Fundo removido.");
     }
 
     function alterarFundoSite(event) {
@@ -2576,6 +2595,7 @@
     elements.copyStockReport.addEventListener("click", copiarRelatorioEstoque);
     elements.addStockColor.addEventListener("click", abrirModalCor);
     elements.changeBackground.addEventListener("click", escolherFundoSite);
+    elements.removeBackground.addEventListener("click", removerFundoSite);
     elements.backgroundInput.addEventListener("change", alterarFundoSite);
     elements.orderForm.addEventListener("submit", gravarPedido);
     elements.downloadReport.addEventListener("click", baixarRelatorioPedidos);
