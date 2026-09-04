@@ -744,12 +744,12 @@
     .quantity-toggle {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
+      gap: 10px;
       min-height: 54px;
-      padding: 5px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: var(--surface-strong);
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
     }
 
     .quantity-choice {
@@ -788,6 +788,10 @@
       flex-wrap: wrap;
       justify-content: flex-end;
       gap: 10px;
+    }
+
+    .history-panel {
+      padding: 12px 0 0;
     }
 
     .history-tools {
@@ -887,6 +891,8 @@
       font-size: 20px;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
+      background: transparent;
+      box-shadow: none;
     }
 
     .amount span {
@@ -1044,11 +1050,9 @@
     .btn,
     .field input,
     .field select,
-    .quantity-toggle,
     .quantity-choice,
     .history-search,
     .order-item,
-    .amount,
     .remove-order,
     .remove-stock,
     .empty,
@@ -1071,11 +1075,9 @@
     .tool-panel,
     .inventory-row,
     .btn,
-    .quantity-toggle,
     .quantity-choice,
     .history-search,
     .order-item,
-    .amount,
     .remove-order,
     .remove-stock,
     .empty,
@@ -1092,11 +1094,9 @@
     .stat::before,
     .tool-panel::before,
     .btn::before,
-    .quantity-toggle::before,
     .quantity-choice::before,
     .history-search::before,
     .order-item::before,
-    .amount::before,
     .remove-order::before,
     .remove-stock::before,
     .empty::before,
@@ -1138,11 +1138,9 @@
     .tool-panel > *,
     .inventory-row > *,
     .btn > *,
-    .quantity-toggle > *,
     .quantity-choice > *,
     .history-search > *,
     .order-item > *,
-    .amount > *,
     .remove-order > *,
     .remove-stock > *,
     .empty > *,
@@ -1534,7 +1532,7 @@
           </form>
         </section>
 
-        <section class="tool-panel" aria-labelledby="historicoTitle">
+        <section class="history-panel" aria-labelledby="historicoTitle">
           <div class="history-head">
             <div>
               <h2 id="historicoTitle">Hist&oacute;rico</h2>
