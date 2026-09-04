@@ -332,7 +332,7 @@
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 14px;
     }
 
@@ -364,6 +364,10 @@
       font-variant-numeric: tabular-nums;
     }
 
+    .stat.color-stat {
+      border-color: color-mix(in srgb, var(--stat-color) 68%, var(--border));
+    }
+
     .tool-panel {
       padding: 28px;
       border: 1px solid var(--border);
@@ -375,10 +379,17 @@
 
     .panel-head {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
       gap: 16px;
       margin-bottom: 18px;
+    }
+
+    .panel-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
     }
 
     .panel-copy {
@@ -437,7 +448,7 @@
       align-content: space-between;
       gap: 18px;
       min-height: 178px;
-      padding: 20px;
+      padding: 24px 20px 20px;
       border: 1.5px solid color-mix(in srgb, var(--stock-color) 72%, var(--border));
       border-radius: var(--radius);
       background: var(--surface-soft);
@@ -450,8 +461,8 @@
     .inventory-row::before {
       content: "";
       position: absolute;
-      top: 18px;
-      right: 18px;
+      top: 24px;
+      right: 70px;
       z-index: 1;
       width: 12px;
       height: 12px;
@@ -476,6 +487,35 @@
     .inventory-row.is-low::before {
       opacity: 1;
       transform: scale(1);
+    }
+
+    .remove-stock {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 2;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--surface-strong) 88%, transparent);
+      color: var(--muted-strong);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 160ms ease, background 160ms ease, transform 160ms ease;
+    }
+
+    .remove-stock:hover {
+      color: var(--red);
+      background: color-mix(in srgb, var(--red), transparent 91%);
+      transform: translateY(-1px);
+    }
+
+    .remove-stock .icon {
+      width: 17px;
+      height: 17px;
     }
 
     .item-name strong {
@@ -628,6 +668,33 @@
       box-shadow: 0 0 0 4px color-mix(in srgb, var(--red), transparent 86%);
     }
 
+    .quantity-toggle {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      min-height: 54px;
+      padding: 5px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface-strong);
+    }
+
+    .quantity-choice {
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted-strong);
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 800;
+      transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .quantity-choice.is-active {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 10px 24px color-mix(in srgb, var(--accent), transparent 74%);
+    }
+
     .history-head {
       display: flex;
       align-items: flex-start;
@@ -648,6 +715,42 @@
       flex-wrap: wrap;
       justify-content: flex-end;
       gap: 10px;
+    }
+
+    .history-tools {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .history-search {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 16px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface-strong);
+      color: var(--muted);
+      box-shadow: var(--inner-shadow);
+    }
+
+    .history-search input {
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 650;
+    }
+
+    .history-search input::placeholder {
+      color: color-mix(in srgb, var(--muted), transparent 15%);
     }
 
     .order-item {
@@ -785,9 +888,79 @@
       transform: translateX(-50%) translateY(0);
     }
 
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.36);
+      backdrop-filter: blur(18px);
+    }
+
+    .modal-backdrop.is-visible {
+      display: flex;
+    }
+
+    .modal {
+      width: min(460px, 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--surface-strong);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .color-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .color-input-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 66px;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .color-sample {
+      width: 100%;
+      height: 54px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface-strong);
+      padding: 4px;
+    }
+
+    .color-sample input {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
     @media (max-width: 1080px) {
       .stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       }
 
       .order-form {
@@ -872,6 +1045,10 @@
         grid-column: auto;
       }
 
+      .history-tools {
+        grid-template-columns: 1fr;
+      }
+
       .history-actions {
         justify-content: flex-start;
       }
@@ -921,6 +1098,10 @@
       <path d="M3 6h.01"></path>
       <path d="M3 12h.01"></path>
       <path d="M3 18h.01"></path>
+    </symbol>
+    <symbol id="icon-search" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"></circle>
+      <path d="m21 21-4.35-4.35"></path>
     </symbol>
     <symbol id="icon-save" viewBox="0 0 24 24">
       <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"></path>
@@ -992,30 +1173,18 @@
 
     <main>
       <section class="view is-active" id="estoqueView" data-view="estoque">
-        <div class="stats" aria-label="Resumo do estoque">
-          <div class="stat">
-            <span>Total no estoque</span>
-            <strong id="stockTotal">0</strong>
-          </div>
-          <div class="stat">
-            <span>Itens em alerta</span>
-            <strong id="lowStockTotal">0</strong>
-          </div>
-          <div class="stat">
-            <span>Pedidos salvos</span>
-            <strong id="ordersTotal">0</strong>
-          </div>
-          <div class="stat">
-            <span>Etiquetas pedidas</span>
-            <strong id="orderedLabelsTotal">0</strong>
-          </div>
-        </div>
+        <div class="stats" id="statsGrid" aria-label="Resumo do estoque e pedidos"></div>
 
         <section class="tool-panel" aria-labelledby="estoqueTitle">
           <div class="panel-head">
             <div>
               <h2 id="estoqueTitle">Estoque de etiquetas</h2>
               <p class="panel-copy">Acompanhe quantidades, salve a contagem e copie um resumo quando precisar.</p>
+            </div>
+            <div class="panel-actions">
+              <button type="button" class="btn btn-secondary" id="addStockColor" aria-label="Adicionar cor" title="Adicionar cor" data-tooltip="Adicionar cor">
+                <svg class="icon" aria-hidden="true"><use href="#icon-plus"></use></svg>
+              </button>
             </div>
           </div>
 
@@ -1061,23 +1230,11 @@
 
             <div class="field">
               <label for="quantidade">Quantidade</label>
-              <select id="quantidade" required>
-                <option value="">Selecione</option>
-                <option value="1200">1.200</option>
-                <option value="1300">1.300</option>
-                <option value="1400">1.400</option>
-                <option value="1500">1.500</option>
-                <option value="1600">1.600</option>
-                <option value="1700">1.700</option>
-                <option value="1800">1.800</option>
-                <option value="1900">1.900</option>
-                <option value="2000">2.000</option>
-                <option value="2100">2.100</option>
-                <option value="2200">2.200</option>
-                <option value="2300">2.300</option>
-                <option value="2400">2.400</option>
-                <option value="2500">2.500</option>
-              </select>
+              <div class="quantity-toggle" role="group" aria-label="Selecionar quantidade">
+                <button type="button" class="quantity-choice is-active" data-quantity-option="1200">1.200</button>
+                <button type="button" class="quantity-choice" data-quantity-option="2500">2.500</button>
+              </div>
+              <input type="hidden" id="quantidade" value="1200" required />
             </div>
 
             <div class="field">
@@ -1108,6 +1265,16 @@
             </div>
           </div>
 
+          <div class="history-tools">
+            <div class="history-search">
+              <svg class="icon" aria-hidden="true"><use href="#icon-search"></use></svg>
+              <input type="search" id="historySearch" placeholder="Pesquisar por nome, cor, unidades ou dia" autocomplete="off" />
+            </div>
+            <button type="button" class="btn btn-secondary" id="clearSearch" aria-label="Limpar pesquisa" title="Limpar pesquisa" data-tooltip="Limpar pesquisa">
+              <svg class="icon" aria-hidden="true"><use href="#icon-x"></use></svg>
+            </button>
+          </div>
+
           <div class="order-list" id="orderList"></div>
         </section>
       </section>
@@ -1118,14 +1285,51 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <div class="modal-backdrop" id="colorModal" aria-hidden="true">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="colorModalTitle">
+      <div class="modal-head">
+        <h2 id="colorModalTitle">Adicionar cor</h2>
+        <button type="button" class="btn btn-secondary" id="closeColorModal" aria-label="Fechar" title="Fechar" data-tooltip="Fechar">
+          <svg class="icon" aria-hidden="true"><use href="#icon-x"></use></svg>
+        </button>
+      </div>
+
+      <form class="color-form" id="colorForm">
+        <div class="color-input-row">
+          <div class="field">
+            <label for="newColorName">Nome da cor</label>
+            <input type="text" id="newColorName" placeholder="Ex: Dourada" autocomplete="off" required />
+          </div>
+          <div class="field">
+            <label for="newColorValue">Cor</label>
+            <div class="color-sample">
+              <input type="color" id="newColorValue" value="#8e8e93" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelColorModal" aria-label="Cancelar" title="Cancelar" data-tooltip="Cancelar">
+            <svg class="icon" aria-hidden="true"><use href="#icon-x"></use></svg>
+          </button>
+          <button type="submit" class="btn btn-primary" aria-label="Salvar cor" title="Salvar cor" data-tooltip="Salvar cor">
+            <svg class="icon" aria-hidden="true"><use href="#icon-save"></use></svg>
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+
   <script>
     const STOCK_KEY = "estoque_etiquetas_v1";
+    const STOCK_ITEMS_KEY = "daty_stock_items_v2";
     const HISTORY_KEY = "historicoEtiquetas";
     const THEME_KEY = "daty_theme";
     const ALERT_STOCK_QUANTITY = 1;
-    const ALERT_STOCK_KEYS = new Set(["branca", "amarelo", "branca_pequena", "ribbon"]);
+    const ALERT_STOCK_NAMES = new Set(["branco", "branca pequena", "amarelo", "ribbon"]);
+    const ORDER_QUANTITIES = [1200, 2500];
 
-    const stockItems = [
+    const DEFAULT_STOCK_ITEMS = [
       { key: "rosa", name: "ROSA", orderName: "Rosa", color: "#efadb7" },
       { key: "branca", name: "BRANCA", orderName: "Branco", color: "#f2f2f2" },
       { key: "amarelo", name: "AMARELO", orderName: "Amarelo", color: "#ffee00" },
@@ -1133,23 +1337,14 @@
       { key: "ribbon", name: "RIBBON", orderName: "Ribbon", ribbon: true }
     ];
 
-    const stockDefault = stockItems.reduce((acc, item) => {
-      acc[item.key] = 0;
-      return acc;
-    }, {});
-
-    const colorByOrder = stockItems.reduce((acc, item) => {
-      acc[item.orderName] = item.color || "#1d1d1f";
-      return acc;
-    }, {});
+    let stockItems = carregarItensEstoque();
+    let selectedOrderQuantity = "1200";
 
     const elements = {
       horaAtual: document.getElementById("horaAtual"),
+      statsGrid: document.getElementById("statsGrid"),
       stockGrid: document.getElementById("stockGrid"),
-      stockTotal: document.getElementById("stockTotal"),
-      lowStockTotal: document.getElementById("lowStockTotal"),
-      ordersTotal: document.getElementById("ordersTotal"),
-      orderedLabelsTotal: document.getElementById("orderedLabelsTotal"),
+      addStockColor: document.getElementById("addStockColor"),
       saveStock: document.getElementById("saveStock"),
       restoreStock: document.getElementById("restoreStock"),
       copyStockReport: document.getElementById("copyStockReport"),
@@ -1162,10 +1357,18 @@
       saveOrder: document.getElementById("saveOrder"),
       duplicateNotice: document.getElementById("duplicateNotice"),
       orderList: document.getElementById("orderList"),
+      historySearch: document.getElementById("historySearch"),
+      clearSearch: document.getElementById("clearSearch"),
       counter: document.getElementById("counter"),
       downloadReport: document.getElementById("downloadReport"),
       clearHistory: document.getElementById("clearHistory"),
-      toast: document.getElementById("toast")
+      toast: document.getElementById("toast"),
+      colorModal: document.getElementById("colorModal"),
+      colorForm: document.getElementById("colorForm"),
+      closeColorModal: document.getElementById("closeColorModal"),
+      cancelColorModal: document.getElementById("cancelColorModal"),
+      newColorName: document.getElementById("newColorName"),
+      newColorValue: document.getElementById("newColorValue")
     };
 
     let historico = carregarHistorico();
@@ -1199,6 +1402,93 @@
 
     function salvarHistorico() {
       localStorage.setItem(HISTORY_KEY, JSON.stringify(historico));
+    }
+
+    function normalizarItemEstoque(item) {
+      return {
+        key: String(item.key || "").trim(),
+        name: String(item.name || "").trim(),
+        orderName: String(item.orderName || item.name || "").trim(),
+        detail: String(item.detail || "").trim(),
+        color: String(item.color || "#8e8e93").trim(),
+        ribbon: Boolean(item.ribbon)
+      };
+    }
+
+    function carregarItensEstoque() {
+      try {
+        const salvo = JSON.parse(localStorage.getItem(STOCK_ITEMS_KEY));
+        if (Array.isArray(salvo)) {
+          const validos = salvo
+            .map(normalizarItemEstoque)
+            .filter((item) => item.key && item.name && item.orderName);
+
+          if (validos.length > 0) {
+            return validos;
+          }
+        }
+      } catch (error) {}
+
+      return DEFAULT_STOCK_ITEMS.map(normalizarItemEstoque);
+    }
+
+    function salvarItensEstoque() {
+      localStorage.setItem(STOCK_ITEMS_KEY, JSON.stringify(stockItems));
+    }
+
+    function getStockDefault() {
+      return stockItems.reduce((acc, item) => {
+        acc[item.key] = 0;
+        return acc;
+      }, {});
+    }
+
+    function lerEstoqueSalvo() {
+      try {
+        return JSON.parse(localStorage.getItem(STOCK_KEY)) || {};
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function salvarDadosEstoque(dados) {
+      localStorage.setItem(STOCK_KEY, JSON.stringify(dados));
+    }
+
+    function getColorByOrder() {
+      return stockItems.reduce((acc, item) => {
+        acc[item.orderName] = item.color || "#1d1d1f";
+        return acc;
+      }, {});
+    }
+
+    function deveAlertarEstoque(item) {
+      return ALERT_STOCK_NAMES.has(normalizarNome(item.orderName || item.name));
+    }
+
+    function formatarNomeCorPedido(nome) {
+      return String(nome || "")
+        .trim()
+        .replace(/\s+/g, " ")
+        .split(" ")
+        .map((parte) => parte.charAt(0).toLocaleUpperCase("pt-BR") + parte.slice(1).toLocaleLowerCase("pt-BR"))
+        .join(" ");
+    }
+
+    function criarChaveEtiqueta(nome) {
+      const base = normalizarNome(nome)
+        .replace(/[^a-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "") || "etiqueta";
+      const usadas = new Set(stockItems.map((item) => item.key));
+      let chave = base;
+      let indice = 2;
+
+      while (usadas.has(chave)) {
+        chave = base + "_" + indice;
+        indice += 1;
+      }
+
+      return chave;
     }
 
     function formatarNumero(numero) {
@@ -1280,16 +1570,36 @@
     }
 
     function renderizarOpcoesCor() {
+      const valorAtual = elements.corInput.value;
+      elements.corInput.innerHTML = "";
+
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "Selecione";
+      elements.corInput.appendChild(placeholder);
+
       stockItems.forEach((item) => {
         const option = document.createElement("option");
         option.value = item.orderName;
         option.textContent = item.orderName;
         elements.corInput.appendChild(option);
       });
+
+      const existeValorAtual = stockItems.some((item) => item.orderName === valorAtual);
+      elements.corInput.value = existeValorAtual ? valorAtual : "";
     }
 
     function renderizarEstoque() {
       elements.stockGrid.innerHTML = "";
+
+      if (stockItems.length === 0) {
+        const vazio = document.createElement("div");
+        vazio.className = "empty";
+        vazio.textContent = "Nenhuma cor cadastrada.";
+        elements.stockGrid.appendChild(vazio);
+        renderizarResumo();
+        return;
+      }
 
       stockItems.forEach((item) => {
         const row = document.createElement("div");
@@ -1297,10 +1607,46 @@
         row.dataset.key = item.key;
         row.style.setProperty("--stock-color", item.color || "#8e8e93");
 
-        row.innerHTML = [
-          '<div class="item-name"><span class="stock-kicker">Estoque</span><strong>' + item.name + '</strong>' + (item.detail ? '<small>' + item.detail + '</small>' : "") + '</div>',
-          '<input class="quantity-input" id="' + item.key + '" data-stock-input="' + item.key + '" type="number" min="0" value="0" inputmode="numeric" aria-label="Quantidade de ' + item.name + '" />'
-        ].join("");
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "remove-stock";
+        remove.dataset.removeStock = item.key;
+        remove.setAttribute("aria-label", "Remover cor " + item.orderName);
+        remove.setAttribute("title", "Remover cor");
+        remove.setAttribute("data-tooltip", "Remover cor");
+        remove.innerHTML = '<svg class="icon" aria-hidden="true"><use href="#icon-x"></use></svg>';
+
+        const name = document.createElement("div");
+        name.className = "item-name";
+
+        const kicker = document.createElement("span");
+        kicker.className = "stock-kicker";
+        kicker.textContent = "Estoque";
+        name.appendChild(kicker);
+
+        const strong = document.createElement("strong");
+        strong.textContent = item.name;
+        name.appendChild(strong);
+
+        if (item.detail) {
+          const small = document.createElement("small");
+          small.textContent = item.detail;
+          name.appendChild(small);
+        }
+
+        const input = document.createElement("input");
+        input.className = "quantity-input";
+        input.id = item.key;
+        input.dataset.stockInput = item.key;
+        input.type = "number";
+        input.min = "0";
+        input.value = "0";
+        input.inputMode = "numeric";
+        input.setAttribute("aria-label", "Quantidade de " + item.name);
+
+        row.appendChild(remove);
+        row.appendChild(name);
+        row.appendChild(input);
 
         elements.stockGrid.appendChild(row);
       });
@@ -1314,7 +1660,7 @@
     function getDadosEstoque() {
       return stockItems.reduce((acc, item) => {
         const input = document.getElementById(item.key);
-        acc[item.key] = Math.max(0, parseInt(input.value, 10) || 0);
+        acc[item.key] = Math.max(0, parseInt(input ? input.value : 0, 10) || 0);
         return acc;
       }, {});
     }
@@ -1330,44 +1676,38 @@
     }
 
     function carregarEstoque() {
-      try {
-        const salvo = JSON.parse(localStorage.getItem(STOCK_KEY));
-        aplicarDadosEstoque({ ...stockDefault, ...(salvo || {}) });
-      } catch (error) {
-        aplicarDadosEstoque(stockDefault);
-      }
+      aplicarDadosEstoque({ ...getStockDefault(), ...lerEstoqueSalvo() });
     }
 
     function salvarEstoque() {
-      localStorage.setItem(STOCK_KEY, JSON.stringify(getDadosEstoque()));
+      salvarDadosEstoque(getDadosEstoque());
       mostrarToast("Estoque salvo.");
       atualizarAvisosEstoque();
     }
 
     function restaurarEstoque() {
       if (!confirm("Deseja restaurar todas as quantidades para zero?")) return;
-      localStorage.setItem(STOCK_KEY, JSON.stringify(stockDefault));
-      aplicarDadosEstoque(stockDefault);
+      const estoqueZerado = getStockDefault();
+      salvarDadosEstoque(estoqueZerado);
+      aplicarDadosEstoque(estoqueZerado);
       mostrarToast("Estoque restaurado.");
     }
 
     function atualizarAvisosEstoque() {
       const dados = getDadosEstoque();
       const baixos = stockItems.filter((item) => {
-        return ALERT_STOCK_KEYS.has(item.key) && dados[item.key] === ALERT_STOCK_QUANTITY;
+        return deveAlertarEstoque(item) && dados[item.key] === ALERT_STOCK_QUANTITY;
       });
-      const total = stockItems.reduce((acc, item) => acc + Number(dados[item.key] || 0), 0);
-
-      elements.stockTotal.textContent = formatarNumero(total);
-      elements.lowStockTotal.textContent = formatarNumero(baixos.length);
 
       document.querySelectorAll(".inventory-row").forEach((row) => {
+        const item = stockItems.find((stockItem) => stockItem.key === row.dataset.key);
         row.classList.toggle(
           "is-low",
-          ALERT_STOCK_KEYS.has(row.dataset.key) && dados[row.dataset.key] === ALERT_STOCK_QUANTITY
+          Boolean(item && deveAlertarEstoque(item) && dados[row.dataset.key] === ALERT_STOCK_QUANTITY)
         );
       });
 
+      renderizarResumo();
       return baixos;
     }
 
@@ -1440,25 +1780,137 @@
       return div;
     }
 
-    function renderizarHistorico() {
-      elements.orderList.innerHTML = "";
-      elements.counter.textContent = historico.length === 1 ? "1 pedido salvo" : formatarNumero(historico.length) + " pedidos salvos";
+    function criarStatCard(rotulo, valor, cor) {
+      const stat = document.createElement("div");
+      stat.className = cor ? "stat color-stat" : "stat";
 
-      const totalEtiquetas = historico.reduce((acc, item) => acc + Number(item.quantidade || 0), 0);
-      elements.ordersTotal.textContent = formatarNumero(historico.length);
-      elements.orderedLabelsTotal.textContent = formatarNumero(totalEtiquetas);
+      if (cor) {
+        stat.style.setProperty("--stat-color", cor);
+      }
+
+      const label = document.createElement("span");
+      label.textContent = rotulo;
+
+      const strong = document.createElement("strong");
+      strong.textContent = typeof valor === "number" ? formatarNumero(valor) : valor;
+
+      stat.appendChild(label);
+      stat.appendChild(strong);
+      elements.statsGrid.appendChild(stat);
+    }
+
+    function contarPedidosPorQuantidade(quantidade) {
+      return historico.filter((item) => Number(item.quantidade || 0) === quantidade).length;
+    }
+
+    function getResumoCores() {
+      const cores = new Map();
+
+      stockItems.forEach((item) => {
+        cores.set(normalizarNome(item.orderName), {
+          nome: item.orderName,
+          cor: item.color || "#8e8e93",
+          total: 0
+        });
+      });
+
+      historico.forEach((item) => {
+        const chave = normalizarNome(item.cor);
+        const resumo = cores.get(chave) || {
+          nome: item.cor || "Sem cor",
+          cor: "#8e8e93",
+          total: 0
+        };
+        resumo.total += 1;
+        cores.set(chave, resumo);
+      });
+
+      return Array.from(cores.values());
+    }
+
+    function renderizarResumo() {
+      const dados = getDadosEstoque();
+      const totalEstoque = stockItems.reduce((acc, item) => acc + Number(dados[item.key] || 0), 0);
+
+      elements.statsGrid.innerHTML = "";
+      criarStatCard("Total no estoque", totalEstoque);
+      criarStatCard("Pedidos salvos", historico.length);
+      criarStatCard("Pedidos 1.200", contarPedidosPorQuantidade(1200));
+      criarStatCard("Pedidos 2.500", contarPedidosPorQuantidade(2500));
+
+      getResumoCores().forEach((item) => {
+        criarStatCard("Pedidos " + item.nome, item.total, item.cor);
+      });
+    }
+
+    function normalizarBusca(valor) {
+      return normalizarNome(valor).replace(/(\d)[^\d\s]+(?=\d)/g, "$1");
+    }
+
+    function textoBuscaHistorico(item) {
+      return [
+        item.nome,
+        item.cor,
+        item.dia,
+        String(item.dia || "").replace(/\D/g, ""),
+        item.hora,
+        item.quantidade,
+        formatarNumero(item.quantidade),
+        item.rolos,
+        formatarNumero(item.rolos)
+      ].join(" ");
+    }
+
+    function getHistoricoFiltrado() {
+      const termos = elements.historySearch.value
+        .trim()
+        .split(/\s+/)
+        .map(normalizarBusca)
+        .filter(Boolean);
+      if (termos.length === 0) return historico;
+
+      return historico.filter((item) => {
+        const texto = normalizarBusca(textoBuscaHistorico(item));
+        return termos.every((termo) => texto.includes(termo));
+      });
+    }
+
+    function renderizarHistorico() {
+      const lista = getHistoricoFiltrado();
+      const pesquisando = Boolean(elements.historySearch.value.trim());
+      elements.orderList.innerHTML = "";
 
       if (historico.length === 0) {
+        elements.counter.textContent = "0 pedidos salvos";
         const vazio = document.createElement("div");
         vazio.className = "empty";
         vazio.textContent = "Nenhum pedido gravado ainda.";
         elements.orderList.appendChild(vazio);
         atualizarEstadoDuplicado();
+        renderizarResumo();
         return;
       }
 
-      historico.forEach((item) => {
-        const cor = colorByOrder[item.cor] || "#1d1d1f";
+      if (pesquisando) {
+        elements.counter.textContent = formatarNumero(lista.length) + " de " + formatarNumero(historico.length) + " pedidos encontrados";
+      } else {
+        elements.counter.textContent = historico.length === 1 ? "1 pedido salvo" : formatarNumero(historico.length) + " pedidos salvos";
+      }
+
+      if (lista.length === 0) {
+        const vazio = document.createElement("div");
+        vazio.className = "empty";
+        vazio.textContent = "Nenhum pedido encontrado.";
+        elements.orderList.appendChild(vazio);
+        atualizarEstadoDuplicado();
+        renderizarResumo();
+        return;
+      }
+
+      const colorByOrder = getColorByOrder();
+
+      lista.forEach((item) => {
+        const cor = colorByOrder[item.cor] || "#8e8e93";
         const article = document.createElement("article");
         article.className = "order-item";
         article.style.setProperty("--order-color", cor);
@@ -1508,13 +1960,13 @@
       });
 
       atualizarEstadoDuplicado();
+      renderizarResumo();
     }
 
     function gerarTextoRelatorioPedidos() {
       const agora = new Date();
-      const dataRelatorio = agora.toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
+      const dataRelatorio = agora.toLocaleDateString("pt-BR");
       const horaRelatorio = agora.toLocaleTimeString("pt-BR", {
-        timeZone: "America/Sao_Paulo",
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit"
@@ -1560,7 +2012,7 @@
       const arquivo = new Blob([texto], { type: "text/plain;charset=utf-8" });
       const url = URL.createObjectURL(arquivo);
       const link = document.createElement("a");
-      const data = new Date().toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" }).replace(/\//g, "-");
+      const data = new Date().toLocaleDateString("pt-BR").replace(/\//g, "-");
 
       link.href = url;
       link.download = "relatorio-daty-" + data + ".txt";
@@ -1590,6 +2042,88 @@
       mostrarToast("Pedido removido.");
     }
 
+    function abrirModalCor() {
+      elements.newColorName.value = "";
+      elements.newColorValue.value = "#8e8e93";
+      elements.colorModal.classList.add("is-visible");
+      elements.colorModal.setAttribute("aria-hidden", "false");
+      setTimeout(() => elements.newColorName.focus(), 60);
+    }
+
+    function fecharModalCor() {
+      elements.colorModal.classList.remove("is-visible");
+      elements.colorModal.setAttribute("aria-hidden", "true");
+    }
+
+    function adicionarCor(event) {
+      event.preventDefault();
+
+      const nomePedido = formatarNomeCorPedido(elements.newColorName.value);
+      if (!nomePedido) {
+        alert("Digite o nome da cor.");
+        elements.newColorName.focus();
+        return;
+      }
+
+      const duplicada = stockItems.some((item) => normalizarNome(item.orderName) === normalizarNome(nomePedido));
+      if (duplicada) {
+        alert('A cor "' + nomePedido + '" ja existe no estoque.');
+        elements.newColorName.focus();
+        return;
+      }
+
+      const item = {
+        key: criarChaveEtiqueta(nomePedido),
+        name: nomePedido.toLocaleUpperCase("pt-BR"),
+        orderName: nomePedido,
+        detail: "",
+        color: elements.newColorValue.value || "#8e8e93",
+        ribbon: false
+      };
+      const dados = getDadosEstoque();
+
+      stockItems.push(item);
+      dados[item.key] = 0;
+      salvarItensEstoque();
+      salvarDadosEstoque(dados);
+      renderizarOpcoesCor();
+      renderizarEstoque();
+      aplicarDadosEstoque({ ...getStockDefault(), ...dados });
+      elements.corInput.value = item.orderName;
+      renderizarHistorico();
+      fecharModalCor();
+      mostrarToast("Cor adicionada.");
+    }
+
+    function removerCorEstoque(key) {
+      const item = stockItems.find((stockItem) => stockItem.key === key);
+      if (!item) return;
+      if (!confirm('Remover a cor "' + item.orderName + '"? O historico de pedidos existente sera mantido.')) return;
+
+      const dados = getDadosEstoque();
+      delete dados[key];
+      stockItems = stockItems.filter((stockItem) => stockItem.key !== key);
+      salvarItensEstoque();
+      salvarDadosEstoque(dados);
+      renderizarOpcoesCor();
+      renderizarEstoque();
+      aplicarDadosEstoque({ ...getStockDefault(), ...dados });
+      renderizarHistorico();
+      mostrarToast("Cor removida.");
+    }
+
+    function setQuantidadePedido(valor) {
+      const quantidade = ORDER_QUANTITIES.includes(Number(valor)) ? String(valor) : String(ORDER_QUANTITIES[0]);
+      selectedOrderQuantity = quantidade;
+      elements.quantidadeInput.value = quantidade;
+
+      document.querySelectorAll("[data-quantity-option]").forEach((button) => {
+        const ativo = button.dataset.quantityOption === quantidade;
+        button.classList.toggle("is-active", ativo);
+        button.setAttribute("aria-pressed", ativo ? "true" : "false");
+      });
+    }
+
     function gravarPedido(event) {
       event.preventDefault();
 
@@ -1611,9 +2145,10 @@
         return;
       }
 
-      if (quantidade < 1200 || quantidade > 2500) {
-        alert("A quantidade de etiquetas precisa estar entre 1200 e 2500.");
-        elements.quantidadeInput.focus();
+      if (!ORDER_QUANTITIES.includes(quantidade)) {
+        alert("Escolha 1.200 ou 2.500 etiquetas.");
+        const ativo = document.querySelector("[data-quantity-option].is-active") || document.querySelector("[data-quantity-option]");
+        if (ativo) ativo.focus();
         return;
       }
 
@@ -1625,7 +2160,6 @@
 
       const agora = new Date();
       const hora = agora.toLocaleTimeString("pt-BR", {
-        timeZone: "America/Sao_Paulo",
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit"
@@ -1644,6 +2178,7 @@
       salvarHistorico();
       renderizarHistorico();
       elements.orderForm.reset();
+      setQuantidadePedido("1200");
       elements.nomeInput.focus();
       mostrarToast("Pedido gravado.");
     }
@@ -1669,17 +2204,43 @@
     elements.saveStock.addEventListener("click", salvarEstoque);
     elements.restoreStock.addEventListener("click", restaurarEstoque);
     elements.copyStockReport.addEventListener("click", copiarRelatorioEstoque);
+    elements.addStockColor.addEventListener("click", abrirModalCor);
     elements.orderForm.addEventListener("submit", gravarPedido);
     elements.downloadReport.addEventListener("click", baixarRelatorioPedidos);
     elements.clearHistory.addEventListener("click", limparHistorico);
+    elements.colorForm.addEventListener("submit", adicionarCor);
+    elements.closeColorModal.addEventListener("click", fecharModalCor);
+    elements.cancelColorModal.addEventListener("click", fecharModalCor);
+    elements.historySearch.addEventListener("input", renderizarHistorico);
+    elements.clearSearch.addEventListener("click", () => {
+      elements.historySearch.value = "";
+      renderizarHistorico();
+      elements.historySearch.focus();
+    });
 
     elements.nomeInput.addEventListener("input", atualizarEstadoDuplicado);
+    elements.stockGrid.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-remove-stock]");
+      if (button) removerCorEstoque(button.dataset.removeStock);
+    });
     elements.orderList.addEventListener("click", (event) => {
       const button = event.target.closest("[data-remove-order]");
       if (button) removerPedido(button.dataset.removeOrder);
     });
+    elements.colorModal.addEventListener("click", (event) => {
+      if (event.target === elements.colorModal) fecharModalCor();
+    });
+    document.querySelectorAll("[data-quantity-option]").forEach((button) => {
+      button.addEventListener("click", () => setQuantidadePedido(button.dataset.quantityOption));
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && elements.colorModal.classList.contains("is-visible")) {
+        fecharModalCor();
+      }
+    });
 
     carregarTema();
+    setQuantidadePedido(selectedOrderQuantity);
     renderizarOpcoesCor();
     renderizarEstoque();
     carregarEstoque();
