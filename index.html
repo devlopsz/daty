@@ -538,9 +538,15 @@
     }
 
     .notice.error {
-      color: var(--red);
-      border-color: color-mix(in srgb, var(--red), transparent 62%);
-      background: color-mix(in srgb, var(--red), transparent 91%);
+      color: #000000;
+      border-color: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.84);
+    }
+
+    .notice.error strong {
+      color: #000000;
+      font-weight: 900;
     }
 
     .notice.success {
@@ -1536,9 +1542,6 @@
           <button type="button" class="btn btn-secondary" id="changeBackground" aria-label="Mudar fundo" data-tooltip="Mudar fundo">
             <svg class="icon" aria-hidden="true"><use href="#icon-image"></use></svg>
           </button>
-          <button type="button" class="btn btn-secondary" id="removeBackground" aria-label="Tirar fundo" data-tooltip="Tirar fundo">
-            <svg class="icon" aria-hidden="true"><use href="#icon-x"></use></svg>
-          </button>
           <input type="file" id="backgroundInput" accept="image/*" hidden />
 
           <div class="theme-switch" role="group" aria-label="Escolher tema">
@@ -1741,7 +1744,6 @@
     const elements = {
       horaAtual: document.getElementById("horaAtual"),
       changeBackground: document.getElementById("changeBackground"),
-      removeBackground: document.getElementById("removeBackground"),
       backgroundInput: document.getElementById("backgroundInput"),
       toggleGlass: document.getElementById("toggleGlass"),
       statsGrid: document.getElementById("statsGrid"),
@@ -1904,6 +1906,16 @@
       return String(texto || "");
     }
 
+    function escaparHtml(texto) {
+      return String(texto || "").replace(/[&<>"']/g, (caractere) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[caractere]);
+    }
+
     function normalizarNome(nome) {
       return String(nome || "")
         .trim()
@@ -1917,6 +1929,13 @@
       const alvo = normalizarNome(nome);
       if (!alvo) return false;
       return historico.some((item) => normalizarNome(item.nome) === alvo);
+    }
+
+    function limparAvisoDuplicado() {
+      elements.nomeField.classList.remove("has-error");
+      elements.saveOrder.disabled = false;
+      elements.duplicateNotice.textContent = "";
+      elements.duplicateNotice.classList.remove("is-visible");
     }
 
     function corTexto(hex) {
@@ -2044,6 +2063,20 @@
       });
     }
 
+    function atualizarBotaoFundo(temFundo) {
+      const icone = elements.changeBackground.querySelector("use");
+      const titulo = temFundo ? "Tirar fundo" : "Mudar fundo";
+      const simbolo = temFundo ? "#icon-x" : "#icon-image";
+
+      if (icone) {
+        icone.setAttribute("href", simbolo);
+      }
+
+      elements.changeBackground.classList.toggle("has-background", temFundo);
+      elements.changeBackground.setAttribute("aria-label", titulo);
+      elements.changeBackground.dataset.tooltip = titulo;
+    }
+
     function aplicarFundoSite(imagem) {
       if (backgroundObjectUrl && backgroundObjectUrl !== imagem) {
         URL.revokeObjectURL(backgroundObjectUrl);
@@ -2053,6 +2086,7 @@
       if (!imagem) {
         document.documentElement.style.removeProperty("--site-bg-image");
         document.documentElement.classList.remove("has-custom-bg");
+        atualizarBotaoFundo(false);
         return;
       }
 
@@ -2062,6 +2096,7 @@
 
       document.documentElement.style.setProperty("--site-bg-image", 'url("' + String(imagem).replace(/"/g, '\\"') + '")');
       document.documentElement.classList.add("has-custom-bg");
+      atualizarBotaoFundo(true);
     }
 
     async function carregarFundoSite() {
@@ -2082,6 +2117,11 @@
     }
 
     function escolherFundoSite() {
+      if (document.documentElement.classList.contains("has-custom-bg")) {
+        removerFundoSite();
+        return;
+      }
+
       elements.backgroundInput.click();
     }
 
@@ -2377,16 +2417,15 @@
       const nome = elements.nomeInput.value.trim().replace(/\s+/g, " ");
       const duplicado = nomeDuplicado(nome);
 
-      elements.nomeField.classList.toggle("has-error", duplicado);
-      elements.saveOrder.disabled = duplicado;
-
-      if (duplicado) {
-        elements.duplicateNotice.textContent = 'Pedido duplicado: "' + nome + '" ja existe no historico. Use outro nome para gravar.';
-        elements.duplicateNotice.classList.add("is-visible");
-      } else {
-        elements.duplicateNotice.textContent = "";
-        elements.duplicateNotice.classList.remove("is-visible");
+      if (!nome || !duplicado) {
+        limparAvisoDuplicado();
+        return;
       }
+
+      elements.nomeField.classList.add("has-error");
+      elements.saveOrder.disabled = true;
+      elements.duplicateNotice.innerHTML = 'DUPLICADO! <strong>"' + escaparHtml(nome) + '"</strong> j&aacute; existe. Use outro nome para gravar!';
+      elements.duplicateNotice.classList.add("is-visible");
     }
 
     function criarAmount(valor, rotulo) {
@@ -2796,9 +2835,10 @@
       });
 
       salvarHistorico();
-      renderizarHistorico();
       elements.orderForm.reset();
       setQuantidadePedido("1200");
+      limparAvisoDuplicado();
+      renderizarHistorico();
       elements.nomeInput.focus();
       mostrarToast("Pedido gravado.");
     }
@@ -2826,7 +2866,6 @@
     elements.copyStockReport.addEventListener("click", copiarRelatorioEstoque);
     elements.addStockColor.addEventListener("click", abrirModalCor);
     elements.changeBackground.addEventListener("click", escolherFundoSite);
-    elements.removeBackground.addEventListener("click", removerFundoSite);
     elements.backgroundInput.addEventListener("change", alterarFundoSite);
     elements.toggleGlass.addEventListener("click", () => {
       setLiquidGlass(document.documentElement.classList.contains("no-liquid-glass"));
