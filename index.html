@@ -436,35 +436,44 @@
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-auto-rows: 1fr;
+      gap: 16px;
     }
 
     .stat {
-      min-height: 108px;
-      padding: 20px;
+      min-height: 168px;
+      padding: 22px 24px;
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
+      border-radius: var(--radius);
       background: var(--surface);
       box-shadow: var(--shadow-soft), var(--inner-shadow);
       backdrop-filter: blur(28px) saturate(160%);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      aspect-ratio: 1.48 / 1;
     }
 
     .stat span {
       display: block;
       color: var(--muted);
-      font-size: 12px;
-      font-weight: 750;
+      max-width: 100%;
+      font-size: 13px;
+      font-weight: 650;
+      line-height: 1.15;
       text-transform: none;
     }
 
     .stat strong {
       display: block;
-      margin-top: 11px;
+      margin-top: 24px;
       font-family: var(--font-body);
-      font-size: 31px;
-      line-height: 1;
-      font-weight: 700;
+      max-width: 100%;
+      font-size: 52px;
+      line-height: 0.92;
+      font-weight: 500;
       font-variant-numeric: tabular-nums;
     }
 
@@ -1338,7 +1347,22 @@
 
     @media (max-width: 1080px) {
       .stats {
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .stat {
+        min-height: 138px;
+        padding: 18px;
+        border-radius: 22px;
+      }
+
+      .stat span {
+        font-size: 11px;
+      }
+
+      .stat strong {
+        font-size: 40px;
       }
 
       .order-form {
@@ -1399,7 +1423,16 @@
       }
 
       .stats {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .stat {
+        min-height: 132px;
+        aspect-ratio: 1.1 / 1;
+      }
+
+      .stat strong {
+        font-size: 42px;
       }
 
       .tool-panel {
