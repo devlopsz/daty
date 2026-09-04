@@ -14,6 +14,14 @@
 
     @font-face {
       font-family: "SF Pro";
+      src: url("assets/fonts/SF-Pro-Display-Regular.otf") format("opentype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "SF Pro";
       src: url("assets/fonts/SF-Pro-Display-Medium.otf") format("opentype");
       font-weight: 500;
       font-style: normal;
@@ -442,7 +450,7 @@
     }
 
     .stat {
-      min-height: 168px;
+      min-height: 190px;
       padding: 22px 24px;
       border: 1px solid var(--border);
       border-radius: var(--radius);
@@ -453,17 +461,33 @@
       flex-direction: column;
       align-items: flex-start;
       justify-content: space-between;
-      aspect-ratio: 1.48 / 1;
+      aspect-ratio: 1.18 / 1;
     }
 
     .stat span {
       display: block;
       color: var(--muted);
       max-width: 100%;
-      font-size: 13px;
+      font-size: 18px;
       font-weight: 650;
-      line-height: 1.15;
+      line-height: 1.05;
       text-transform: none;
+    }
+
+    .stat-label {
+      display: grid;
+      gap: 3px;
+    }
+
+    .stat-label-line {
+      display: block;
+    }
+
+    .stat .stat-label-emphasis {
+      color: var(--text);
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1;
     }
 
     .stat strong {
@@ -471,9 +495,9 @@
       margin-top: 24px;
       font-family: var(--font-body);
       max-width: 100%;
-      font-size: 52px;
-      line-height: 0.92;
-      font-weight: 500;
+      font-size: 66px;
+      line-height: 0.88;
+      font-weight: 400;
       font-variant-numeric: tabular-nums;
     }
 
@@ -491,6 +515,7 @@
     }
 
     .stock-panel {
+      margin-top: 28px;
       padding: 0;
       border: 0;
       background: transparent;
@@ -501,6 +526,10 @@
 
     .stock-panel .panel-head {
       margin: 4px 0 18px;
+    }
+
+    .stock-panel h2 {
+      font-size: 34px;
     }
 
     .panel-head {
@@ -1352,17 +1381,21 @@
       }
 
       .stat {
-        min-height: 138px;
+        min-height: 158px;
         padding: 18px;
         border-radius: 22px;
       }
 
       .stat span {
-        font-size: 11px;
+        font-size: 14px;
+      }
+
+      .stat .stat-label-emphasis {
+        font-size: 17px;
       }
 
       .stat strong {
-        font-size: 40px;
+        font-size: 50px;
       }
 
       .order-form {
@@ -1431,8 +1464,20 @@
         aspect-ratio: 1.1 / 1;
       }
 
+      .stat span {
+        font-size: 13px;
+      }
+
+      .stat .stat-label-emphasis {
+        font-size: 16px;
+      }
+
       .stat strong {
-        font-size: 42px;
+        font-size: 46px;
+      }
+
+      .stock-panel h2 {
+        font-size: 29px;
       }
 
       .tool-panel {
@@ -1609,7 +1654,6 @@
           <div class="panel-head">
             <div>
               <h2 id="estoqueTitle">Estoque de etiquetas</h2>
-              <p class="panel-copy">Acompanhe quantidades, salve a contagem e copie um resumo quando precisar.</p>
             </div>
             <div class="panel-actions">
               <button type="button" class="btn btn-secondary" id="addStockColor" aria-label="Adicionar cor" data-tooltip="Adicionar cor">
@@ -2319,7 +2363,7 @@
         name.className = "item-name";
 
         const strong = document.createElement("strong");
-        strong.textContent = item.name;
+        strong.textContent = formatarNomeCorPedido(item.name);
         name.appendChild(strong);
 
         if (item.detail) {
@@ -2473,6 +2517,35 @@
       return div;
     }
 
+    function getLinhasRotuloStat(rotulo) {
+      const texto = String(rotulo || "").trim().replace(/\s+/g, " ");
+
+      if (/^total no estoque$/i.test(texto)) {
+        return [
+          { texto: "Total no" },
+          { texto: "Estoque" }
+        ];
+      }
+
+      if (/^pedidos salvos$/i.test(texto)) {
+        return [
+          { texto: "Pedidos" },
+          { texto: "Salvos" }
+        ];
+      }
+
+      const match = texto.match(/^pedidos\s+(.+)$/i);
+      if (match) {
+        const detalhe = match[1];
+        return [
+          { texto: "Pedidos" },
+          { texto: detalhe, destaque: /^(1\.200|2\.500|2\.000)$/.test(detalhe) }
+        ];
+      }
+
+      return [{ texto }];
+    }
+
     function criarStatCard(rotulo, valor, cor) {
       const stat = document.createElement("div");
       stat.className = cor ? "stat color-stat" : "stat";
@@ -2482,7 +2555,13 @@
       }
 
       const label = document.createElement("span");
-      label.textContent = rotulo;
+      label.className = "stat-label";
+      getLinhasRotuloStat(rotulo).forEach((linha) => {
+        const item = document.createElement("span");
+        item.className = linha.destaque ? "stat-label-line stat-label-emphasis" : "stat-label-line";
+        item.textContent = linha.texto;
+        label.appendChild(item);
+      });
 
       const strong = document.createElement("strong");
       strong.textContent = typeof valor === "number" ? formatarNumero(valor) : valor;
@@ -2532,7 +2611,7 @@
       criarStatCard("Pedidos 2.500", contarPedidosPorQuantidade(2500));
 
       getResumoCores().forEach((item) => {
-        criarStatCard("Pedidos " + item.nome, item.total, item.cor);
+        criarStatCard("Pedidos " + formatarNomeCorPedido(item.nome), item.total, item.cor);
       });
     }
 
